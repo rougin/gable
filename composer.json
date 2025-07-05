@@ -24,14 +24,14 @@
   {
     "psr-4":
     {
-      "Rougin\\Gable\\": "src",
+      "Rougin\\Gable\\": "src"
     }
   },
   "autoload-dev":
   {
     "psr-4":
     {
-      "Rougin\\Gable\\": "tests",
+      "Rougin\\Gable\\": "tests"
     }
   },
   "scripts":
