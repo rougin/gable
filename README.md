@@ -246,8 +246,8 @@ $table = new Table;
 
 $table->newColumn();
 $table->setCell('Status')
-  ->addBadge('Active', 'item.status === "active"', 'bg-success')
-  ->addBadge('Inactive', 'item.status === "inactive"', 'bg-danger');
+  ->addBadge('Active', "item.status === 'active'", 'bg-success')
+  ->addBadge('Inactive', "item.status === 'inactive'", 'bg-danger');
 $table->setCell('Name');
 
 $table->newRow();
@@ -481,7 +481,7 @@ withAlpine($name = 'items', ...)
 ```
 withDeleteAction($clicked, $name = 'Delete')
 ```
-* Adds a "Delete" action.
+* Adds a `Delete` action.
 
 ```
 withLoading($count = 5, $name = 'loading')
@@ -491,7 +491,7 @@ withLoading($count = 5, $name = 'loading')
 ```
 withUpdateAction($clicked, $name = 'Update')
 ```
-* Adds an "Update" action.
+* Adds an `Update` action.
 
 ```
 withNoItemsText($text, $key = 'empty')
