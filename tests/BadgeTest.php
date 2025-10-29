@@ -12,12 +12,12 @@ class BadgeTest extends Testcase
     /**
      * @return void
      */
-    public function test_renders_correctly_with_default_values()
+    public function test_renders_with_custom_style()
     {
         // Arrange
-        $badge = new Badge('Active', 'item.status === \'active\'', 'bg-success');
+        $badge = new Badge('Inactive', 'item.status === \'inactive\'', 'bg-danger');
 
-        $expect = '<template x-if="item.status === \'active\'"><span class="badge rounded-pill text-uppercase bg-success">Active</span></template>';
+        $expect = '<template x-if="item.status === \'inactive\'"><span class="badge rounded-pill text-uppercase bg-danger">Inactive</span></template>';
 
         // Act
         $actual = (string) $badge;
@@ -29,12 +29,12 @@ class BadgeTest extends Testcase
     /**
      * @return void
      */
-    public function test_renders_correctly_with_custom_values()
+    public function test_renders_with_default_style()
     {
         // Arrange
-        $badge = new Badge('Inactive', 'item.status === \'inactive\'', 'bg-danger');
+        $badge = new Badge('Active', 'item.status === \'active\'', 'bg-success');
 
-        $expect = '<template x-if="item.status === \'inactive\'"><span class="badge rounded-pill text-uppercase bg-danger">Inactive</span></template>';
+        $expect = '<template x-if="item.status === \'active\'"><span class="badge rounded-pill text-uppercase bg-success">Active</span></template>';
 
         // Act
         $actual = (string) $badge;

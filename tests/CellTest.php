@@ -12,182 +12,235 @@ class CellTest extends Testcase
     /**
      * @return void
      */
-    public function test_cell_is_initialized_with_provided_properties()
+    public function test_adds_badge()
     {
         // Arrange
-        $expect_value = 'Test Value';
-        $expect_align = 'center';
-        $expect_name = 'test_value';
-        $expect_colspan = 2;
-        $expect_rowspan = 3;
-        $expect_parsed_attrs = 'align="center" class="test-class" cspan="2" rspan="3" style="color: red;" width="50%"';
+        $cell = new Cell;
+
+        $badge1 = new Badge('Active', 'true', 'bg-success');
+
+        $badge2 = new Badge('Inactive', 'false', 'bg-danger');
 
         // Act
-        $cell = new Cell($expect_value, $expect_align, 'test-class', $expect_colspan, $expect_rowspan, 'color: red;', 50);
+        $cell->addBadge($badge1);
+
+        $cell->addBadge($badge2);
+
+        $actual = $cell->getBadges();
 
         // Assert
-        $this->assertEquals($expect_value, $cell->getValue());
-        $this->assertEquals($expect_align, $cell->getAlign());
-        $this->assertEquals($expect_name, $cell->getName());
-        $this->assertEquals($expect_colspan, $cell->getColspan());
-        $this->assertEquals($expect_rowspan, $cell->getRowspan());
-        $this->assertEquals($expect_parsed_attrs, $cell->getParsedAttrs());
+        $this->assertEquals($badge1, $actual[0]);
+
+        $this->assertEquals($badge2, $actual[1]);
     }
 
     /**
      * @return void
      */
-    public function test_badges_can_be_added_to_a_cell()
+    public function test_generates_name_from_value()
     {
+        // Test case 1: "First Name" ---------
         // Arrange
-        $cell = new Cell();
-        $expect_badge1 = new Badge('Active', 'true', 'bg-success');
-        $expect_badge2 = new Badge('Inactive', 'false', 'bg-danger');
+        $cell = new Cell('First Name');
+
+        $expect = 'first_name';
 
         // Act
-        $cell->addBadge($expect_badge1);
-        $cell->addBadge($expect_badge2);
-
-        $actual_badges = $cell->getBadges();
+        $actual = $cell->getName();
 
         // Assert
-        $this->assertCount(2, $actual_badges);
-        $this->assertEquals($expect_badge1, $actual_badges[0]);
-        $this->assertEquals($expect_badge2, $actual_badges[1]);
+        $this->assertEquals($expect, $actual);
+        // -----------------------------------
+
+        // Test case 2: "AnotherValue" -------
+        // Arrange
+        $cell = new Cell('AnotherValue');
+
+        $expect = 'another_value';
+
+        // Act
+        $actual = $cell->getName();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+        // -----------------------------------
+
+        // Test case 3: "ID" -----------------
+        // Arrange
+        $cell = new Cell('ID');
+
+        $expect = 'id';
+
+        // Act
+        $actual = $cell->getName();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+        // -----------------------------------
+
+        // Test case 4: "User ID" ------------
+        // Arrange
+        $cell = new Cell('User ID');
+
+        $expect = 'user_id';
+
+        // Act
+        $actual = $cell->getName();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+        // -----------------------------------
     }
 
     /**
      * @return void
      */
-    public function test_existing_badges_can_be_replaced_in_a_cell()
+    public function test_parses_all_attributes()
     {
         // Arrange
-        $cell = new Cell();
-        $expect_badge1 = new Badge('Active', 'true', 'bg-success');
-        $expect_badge2 = new Badge('Inactive', 'false', 'bg-danger');
-        $expect_badges = [$expect_badge1, $expect_badge2];
+        $cell = new Cell;
 
-        // Act
-        $cell->setBadges($expect_badges);
-
-        $actual_badges = $cell->getBadges();
-
-        // Assert
-        $this->assertCount(2, $actual_badges);
-        $this->assertEquals($expect_badge1, $actual_badges[0]);
-        $this->assertEquals($expect_badge2, $actual_badges[1]);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_cell_name_can_be_set_and_retrieved()
-    {
-        // Arrange
-        $cell = new Cell();
-        $expect_name = 'custom_name';
-
-        // Act
-        $cell->setName($expect_name);
-        $actual_name = $cell->getName();
-
-        // Assert
-        $this->assertEquals($expect_name, $actual_name);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_cell_value_can_be_set_and_retrieved()
-    {
-        // Arrange
-        $cell = new Cell();
-        $expect_value = 'New Value';
-
-        // Act
-        $cell->setValue($expect_value);
-        $actual_value = $cell->getValue();
-
-        // Assert
-        $this->assertEquals($expect_value, $actual_value);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_cell_attributes_are_parsed_correctly()
-    {
-        // Arrange
-        $cell = new Cell();
         $cell->withAttr('id', 'my-cell');
+
         $cell->setClass('custom-class');
+
         $cell->setStyle('font-size: 12px;');
+
         $cell->setWidth(75);
 
-        $expect_attrs = 'id="my-cell" class="custom-class" style="font-size: 12px;" width="75%"';
+        $expect = 'id="my-cell" class="custom-class" style="font-size: 12px;" width="75%"';
 
         // Act
-        $actual_attrs = $cell->getParsedAttrs();
+        $actual = $cell->getParsedAttrs();
 
         // Assert
-        $this->assertEquals($expect_attrs, $actual_attrs);
+        $this->assertEquals($expect, $actual);
     }
 
     /**
      * @return void
      */
-    public function test_cell_returns_empty_attributes_for_null_values()
+    public function test_replaces_badges()
     {
         // Arrange
-        $cell = new Cell(null, null, null, null, null, null, null);
-        $expect_attrs = '';
+        $cell = new Cell;
+
+        $badge1 = new Badge('Active', 'true', 'bg-success');
+
+        $badge2 = new Badge('Inactive', 'false', 'bg-danger');
+
+        $badges = array($badge1, $badge2);
 
         // Act
-        $actual_attrs = $cell->getParsedAttrs();
+        $cell->setBadges($badges);
+
+        $actual = $cell->getBadges();
 
         // Assert
-        $this->assertEquals($expect_attrs, $actual_attrs);
+        $this->assertEquals($badge1, $actual[0]);
+
+        $this->assertEquals($badge2, $actual[1]);
     }
 
     /**
      * @return void
      */
-    public function test_cell_name_is_generated_from_value()
+    public function test_returns_empty_attrs_for_null()
     {
-        // Test case 1: "First Name"
         // Arrange
-        $cell1 = new Cell('First Name');
-        $expect_name1 = 'first_name';
-        // Act
-        $actual_name1 = $cell1->getName();
-        // Assert
-        $this->assertEquals($expect_name1, $actual_name1);
+        $cell = new Cell;
 
-        // Test case 2: "AnotherValue"
-        // Arrange
-        $cell2 = new Cell('AnotherValue');
-        $expect_name2 = 'another_value';
-        // Act
-        $actual_name2 = $cell2->getName();
-        // Assert
-        $this->assertEquals($expect_name2, $actual_name2);
+        $expect = '';
 
-        // Test case 3: "ID"
-        // Arrange
-        $cell3 = new Cell('ID');
-        $expect_name3 = 'id';
         // Act
-        $actual_name3 = $cell3->getName();
-        // Assert
-        $this->assertEquals($expect_name3, $actual_name3);
+        $actual = $cell->getParsedAttrs();
 
-        // Test case 4: "User ID"
-        // Arrange
-        $cell4 = new Cell('User ID');
-        $expect_name4 = 'user_id';
-        // Act
-        $actual_name4 = $cell4->getName();
         // Assert
-        $this->assertEquals($expect_name4, $actual_name4);
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sets_and_gets_name()
+    {
+        // Arrange
+        $cell = new Cell;
+
+        $expect = 'custom_name';
+
+        // Act
+        $cell->setName($expect);
+
+        $actual = $cell->getName();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sets_and_gets_value()
+    {
+        // Arrange
+        $cell = new Cell;
+
+        $expect = 'New Value';
+
+        // Act
+        $cell->setValue($expect);
+
+        $actual = $cell->getValue();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_all_props()
+    {
+        // Arrange
+        $value = 'Test Value';
+
+        $align = 'center';
+
+        $name = 'test_value';
+
+        $colspan = 2;
+
+        $rowspan = 3;
+
+        $attrs = 'align="center" class="test-class" cspan="2" rspan="3" style="color: red;" width="50%"';
+
+        // Act
+        $cell = new Cell($value, $align, 'test-class', $colspan, $rowspan, 'color: red;', 50);
+
+        // Assert
+        $actual = $cell->getColspan();
+
+        $this->assertEquals($colspan, $actual);
+
+        $actual = $cell->getValue();
+
+        $this->assertEquals($value, $actual);
+
+        $actual = $cell->getAlign();
+
+        $this->assertEquals($align, $actual);
+
+        $actual = $cell->getRowspan();
+
+        $this->assertEquals($rowspan, $actual);
+
+        $actual = $cell->getName();
+
+        $this->assertEquals($name, $actual);
+
+        $actual = $cell->getParsedAttrs();
+
+        $this->assertEquals($attrs, $actual);
     }
 }

@@ -12,112 +12,128 @@ class ElementTest extends Testcase
     /**
      * @return void
      */
-    public function test_attributes_can_be_set_and_retrieved()
+    public function test_parses_all_set_attrs()
     {
         // Arrange
-        $element = new Element();
-        $element->withAttr('id', 'test-id');
-        $element->withAttr('data-test', 'value');
+        $el = new Element;
 
-        $expect_attrs = [
-            'id' => 'test-id',
-            'data-test' => 'value',
-        ];
+        $el->withAttr('id', 'test-element');
+
+        $el->setClass('test-class');
+
+        $el->setWidth(50);
+
+        $expect = 'id="test-element" class="test-class" width="50%"';
 
         // Act
-        $actual_attrs = $element->getAttrs();
+        $actual = $el->getParsedAttrs();
 
         // Assert
-        $this->assertEquals($expect_attrs, $actual_attrs);
+        $this->assertEquals($expect, $actual);
     }
 
     /**
      * @return void
      */
-    public function test_class_attribute_can_be_set()
+    public function test_returns_empty_for_null_attrs()
     {
         // Arrange
-        $element = new Element();
-        $expect_class = 'my-class';
+        $el = new Element;
+
+        $el->withAttr('id', null);
+
+        $el->setClass(null);
+
+        $expect = '';
 
         // Act
-        $element->setClass($expect_class);
-        $actual_class = $element->getAttrs()['class'];
+        $actual = $el->getParsedAttrs();
 
         // Assert
-        $this->assertEquals($expect_class, $actual_class);
+        $this->assertEquals($expect, $actual);
     }
 
     /**
      * @return void
      */
-    public function test_style_attribute_can_be_set()
+    public function test_sets_and_gets_class_attr()
     {
         // Arrange
-        $element = new Element();
-        $expect_style = 'color: blue;';
+        $el = new Element;
+
+        $expect = 'my-class';
 
         // Act
-        $element->setStyle($expect_style);
-        $actual_style = $element->getAttrs()['style'];
+        $el->setClass($expect);
+
+        $actual = $el->getAttrs()['class'];
 
         // Assert
-        $this->assertEquals($expect_style, $actual_style);
+        $this->assertEquals($expect, $actual);
     }
 
     /**
      * @return void
      */
-    public function test_width_attribute_can_be_set()
+    public function test_sets_and_gets_custom_attrs()
     {
         // Arrange
-        $element = new Element();
-        $expect_width = 100;
+        $el = new Element;
+
+        $el->withAttr('id', 'test-id');
+
+        $el->withAttr('data-test', 'value');
+
+        $expect = array('id' => 'test-id');
+
+        $expect['data-test'] = 'value';
 
         // Act
-        $element->setWidth($expect_width);
-        $actual_width = $element->getAttrs()['width'];
+        $actual = $el->getAttrs();
 
         // Assert
-        $this->assertEquals($expect_width, $actual_width);
+        $this->assertEquals($expect, $actual);
     }
 
     /**
      * @return void
      */
-    public function test_parsed_attributes_are_generated_correctly()
+    public function test_sets_and_gets_style_attr()
     {
         // Arrange
-        $element = new Element();
-        $element->withAttr('id', 'test-element');
-        $element->setClass('test-class');
-        $element->setWidth(50);
+        $el = new Element;
 
-        $expect_parsed_attrs = 'id="test-element" class="test-class" width="50%"';
+        $expect = 'color: blue;';
 
         // Act
-        $actual_parsed_attrs = $element->getParsedAttrs();
+        $el->setStyle($expect);
+
+        $attrs = $el->getAttrs();
+
+        $actual = $attrs['style'];
 
         // Assert
-        $this->assertEquals($expect_parsed_attrs, $actual_parsed_attrs);
+        $this->assertEquals($expect, $actual);
     }
 
     /**
      * @return void
      */
-    public function test_empty_string_returned_for_null_attributes()
+    public function test_sets_and_gets_width_attr()
     {
         // Arrange
-        $element = new Element();
-        $element->withAttr('id', null);
-        $element->setClass(null);
+        $el = new Element;
 
-        $expect_parsed_attrs = '';
+        $expect = 100;
 
         // Act
-        $actual_parsed_attrs = $element->getParsedAttrs();
+        $el->setWidth($expect);
+
+        $attrs = $el->getAttrs();
+
+        $actual = $attrs['width'];
 
         // Assert
-        $this->assertEquals($expect_parsed_attrs, $actual_parsed_attrs);
+        $this->assertEquals($expect, $actual);
     }
 }
