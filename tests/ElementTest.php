@@ -42,8 +42,6 @@ class ElementTest extends Testcase
 
         $el->withAttr('id', null);
 
-        $el->setClass(null);
-
         $expect = '';
 
         // Act

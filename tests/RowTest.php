@@ -40,7 +40,7 @@ class RowTest extends Testcase
     public function test_renders_cells_with_custom_tag()
     {
         // Arrange
-        $row = new Row();
+        $row = new Row;
 
         $cell1 = new Cell('Header 1');
 

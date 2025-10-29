@@ -47,8 +47,8 @@ class TableTest extends Testcase
         $table->newColumn();
 
         $table->setCell('Status')
-            ->addBadge('Active', "item.status === 'active'", 'bg-success')
-            ->addBadge('Inactive', "item.status === 'inactive'", 'bg-danger');
+            ->addBadge('Active', 'item.status === \'active\'', 'bg-success')
+            ->addBadge('Inactive', 'item.status === \'inactive\'', 'bg-danger');
 
         $table->setCell('Name');
 
@@ -216,7 +216,7 @@ class TableTest extends Testcase
     }
 
     /**
-     * Tests Table::__toString() with custom classes and st@return void
+     * @return void
      */
     public function test_renders_with_custom_styles()
     {
@@ -298,13 +298,11 @@ class TableTest extends Testcase
         // Arrange
         $table = new Table;
 
-        // This test reflects the current (buggy) behavior of setData
-        // where it only considers the cells of the last defined column for data population.
-        $table->newColumn(); // First column definition (will be ignored by setData for data population)
+        $table->newColumn(); // First column definition
 
         $table->setCell('ID')->withName('id');
 
-        $table->newColumn(); // Second column definition (used by setData)
+        $table->newColumn(); // Second column definition
 
         $table->setCell('Name')->withName('name');
 
@@ -317,8 +315,8 @@ class TableTest extends Testcase
         // Act
         $table->setData($data);
 
-        // Expected HTML based on the current setData logic (only 'name' and 'age' from the last column)
-        $expect = '<table><thead><tr><th>ID</th></tr><tr><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>Alice</td><td>25</td></tr><tr><td>Bob</td><td>30</td></tr></tbody></table>';
+        // Expected HTML based on the corrected setData logic
+        $expect = '<table><thead><tr><th>ID</th></tr><tr><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>1</td><td>Alice</td><td>25</td></tr><tr><td>2</td><td>Bob</td><td>30</td></tr></tbody></table>';
 
         $actual = $table->__toString();
 

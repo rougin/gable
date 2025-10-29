@@ -328,13 +328,18 @@ class Table extends Element
      */
     public function setData($data = array())
     {
-        $col = $this->cols[count($this->cols) - 1];
+        $cells = array();
+
+        foreach ($this->cols as $col)
+        {
+            $cells = array_merge($cells, $col->getCells());
+        }
 
         foreach ($data as $item)
         {
             $this->newRow();
 
-            foreach ($col->getCells() as $cell)
+            foreach ($cells as $cell)
             {
                 $name = $cell->getName();
 
