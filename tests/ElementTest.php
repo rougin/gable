@@ -64,7 +64,9 @@ class ElementTest extends Testcase
         // Act
         $el->setClass($expect);
 
-        $actual = $el->getAttrs()['class'];
+        $attrs = $el->getAttrs();
+
+        $actual = $attrs['class'];
 
         // Assert
         $this->assertEquals($expect, $actual);
