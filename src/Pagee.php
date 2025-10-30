@@ -2,8 +2,6 @@
 
 namespace Rougin\Gable;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * @package Gable
  *
@@ -49,45 +47,6 @@ class Pagee
      * @var integer
      */
     protected $total = 0;
-
-    /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param string                                   $limit
-     * @param string                                   $page
-     *
-     * @return self
-     */
-    public static function fromRequest(ServerRequestInterface $request, $limit = 'l', $page = 'p')
-    {
-        $self = new Pagee;
-
-        $self->setLimitKey($limit);
-
-        $self->setPageKey($page);
-
-        /** @var array<string, string> */
-        $params = $request->getQueryParams();
-
-        $key = $self->getLimitKey();
-
-        if (array_key_exists($key, $params))
-        {
-            $limit = $params[$key];
-
-            $self->setLimit((int) $limit);
-        }
-
-        $key = $self->getPageKey();
-
-        if (array_key_exists($key, $params))
-        {
-            $page = $params[$key];
-
-            $self->setPage((int) $page);
-        }
-
-        return $self;
-    }
 
     /**
      * @param integer     $page
