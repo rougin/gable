@@ -159,139 +159,6 @@ echo $table;
 </table>
 ```
 
-## Actions
-
-Actions can be added to each row, allowing for operations like updating or deleting records. The `withUpdateAction` and `withDeleteAction` methods provide a convenient way to add the specified common actions:
-
-``` php
-// index.php
-
-use Rougin\Gable\Table;
-
-$table = new Table;
-
-$table->newColumn();
-$table->setCell('Name');
-$table->setCell('Age');
-
-// Adds an "Action" column ---
-$table->withActions();
-// ---------------------------
-
-// Assumes "alpinejs" is integrated --------
-$table->withUpdateAction('update(item.id)');
-$table->withDeleteAction('delete(item.id)');
-// -----------------------------------------
-
-$table->newRow();
-$table->setCell('John Doe');
-$table->setCell('30');
-
-$table->newRow();
-$table->setCell('Jane Doe');
-$table->setCell('28');
-
-echo $table;
-```
-
-``` html
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>John Doe</td>
-      <td>30</td>
-      <td>
-        <div class="dropdown">
-          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
-          <div class="dropdown-menu dropdown-menu-end">
-            <div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div>
-            <div><hr class="dropdown-divider"></div>
-            <div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Jane Doe</td>
-      <td>28</td>
-      <td>
-        <div class="dropdown">
-          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
-          <div class="dropdown-menu dropdown-menu-end">
-            <div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div>
-            <div><hr class="dropdown-divider"></div>
-            <div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div>
-          </div>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-```
-
-> [!NOTE]
-> This is only works when integrated in `alpinejs`.
-
-## Badges
-
-Badges can be used to highlight certain information in a cell, such as a record's status.
-
-``` php
-// index.php
-
-use Rougin\Gable\Table;
-
-$table = new Table;
-
-$table->newColumn();
-$table->setCell('Status')
-  ->addBadge('Active', "item.status === 'active'", 'bg-success')
-  ->addBadge('Inactive', "item.status === 'inactive'", 'bg-danger');
-$table->setCell('Name');
-
-$table->newRow();
-// Placeholder for the badge ---
-$table->setCell('');
-// -----------------------------
-$table->setCell('John Doe');
-
-echo $table;
-```
-
-``` html
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>John Doe</td>
-      <td>
-        <template x-if="item.status === 'active'">
-          <span class="badge rounded-pill text-uppercase bg-success">Active</span>
-        </template>
-        <template x-if="item.status === 'inactive'">
-          <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
-        </template>
-      </td>
-    </tr>
-  </tbody>
-</table>
-```
-
-> [!NOTE]
-> This is only works when integrated in `alpinejs`.
-
 ## Pagination
 
 The `Pagee` class provides a simple way to generate pagination links for a table:
@@ -388,7 +255,7 @@ echo $pagee;
 </div>
 ```
 
-## Integration to `alpinejs`
+## Using `alpinejs`
 
 For creating dynamic and interactive tables, `Gable` provides a seamless integration with [alpinejs](https://alpinejs.dev/). This allows for features like real-time data updates, loading indicators, and more:
 
@@ -455,59 +322,298 @@ This will generate a table that is bound to an `alpinejs` component, ready to di
 </table>
 ```
 
+## Actions
+
+Actions can be added to each row, allowing for operations like updating or deleting records. The `withUpdateAction` and `withDeleteAction` methods provide a convenient way to add the specified common actions:
+
+``` php
+// index.php
+
+use Rougin\Gable\Table;
+
+$table = new Table;
+
+$table->newColumn();
+$table->setCell('Name');
+$table->setCell('Age');
+
+// Adds an "Action" column ---
+$table->withActions();
+// ---------------------------
+
+$table->withUpdateAction('update(item.id)');
+$table->withDeleteAction('delete(item.id)');
+
+$table->newRow();
+$table->setCell('John Doe');
+$table->setCell('30');
+
+$table->newRow();
+$table->setCell('Jane Doe');
+$table->setCell('28');
+
+// Requires "alpinejs" to be enabled ---
+$table->withAlpine();
+// -------------------------------------
+
+echo $table;
+```
+
+``` html
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>John Doe</td>
+      <td>30</td>
+      <td>
+        <div class="dropdown">
+          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div>
+            <div><hr class="dropdown-divider"></div>
+            <div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>Jane Doe</td>
+      <td>28</td>
+      <td>
+        <div class="dropdown">
+          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div>
+            <div><hr class="dropdown-divider"></div>
+            <div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+## Badges
+
+Badges can be used to highlight certain information in a cell, such as a record's status.
+
+``` php
+// index.php
+
+use Rougin\Gable\Table;
+
+$table = new Table;
+
+$table->newColumn();
+$table->setCell('Status')
+  ->addBadge('Active', "item.status === 'active'", 'bg-success')
+  ->addBadge('Inactive', "item.status === 'inactive'", 'bg-danger');
+$table->setCell('Name');
+
+$table->newRow();
+// Placeholder for the badge ---
+$table->setCell('');
+// -----------------------------
+$table->setCell('John Doe');
+
+// Requires "alpinejs" to be enabled ---
+$table->withAlpine();
+// -------------------------------------
+
+echo $table;
+```
+
+``` html
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>John Doe</td>
+      <td>
+        <template x-if="item.status === 'active'">
+          <span class="badge rounded-pill text-uppercase bg-success">Active</span>
+        </template>
+        <template x-if="item.status === 'inactive'">
+          <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
+        </template>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
 ## Available methods
 
-The following methods are available in the `Table` class for advanced customization:
+The following methods are available in the `Table` class:
 
+``` php
+/**
+ * Adds a one-line custom HTML to the last added cell.
+ *
+ * @param string $html
+ *
+ * @return self
+ */
+public function addHtml($html)
 ```
-newColumn($class = null, $style = null, $width = null)
-```
-* Adds a new `<tr>` element to the `<thead>`.
 
+``` php
+/**
+ * Adds a new "<tr>" element to the "<thead>".
+ *
+ * @param string|null  $class
+ * @param string|null  $style
+ * @param integer|null $width
+ *
+ * @return self
+ */
+public function newColumn($class = null, $style = null, $width = null)
 ```
-newRow($class = null, $style = null, $width = null)
-```
-* Adds a new `<tr>` element to the `<tbody>`.
 
+``` php
+/**
+ * Adds a new "<tr>" element to the "<tbody>".
+ *
+ * @param string|null  $class
+ * @param string|null  $style
+ * @param integer|null $width
+ *
+ * @return self
+ */
+public function newRow($class = null, $style = null, $width = null)
 ```
-setCell($value, $align = null, $class = null, $cspan = null, $rspan = null, $style = null, $width = null)
-```
-* Adds a new `<td>` element.
 
+``` php
+/**
+ * Adds a new "<td>" element.
+ *
+ * @param mixed|null   $value
+ * @param string|null  $align
+ * @param string|null  $class
+ * @param integer|null $cspan
+ * @param integer|null $rspan
+ * @param string|null  $style
+ * @param integer|null $width
+ *
+ * @return self
+ */
+public function setCell($value, $align = null, $class = null, $cspan = null, $rspan = null, $style = null, $width = null)
 ```
-withActions($value = 'Action', ...)
-```
-* Adds a column for actions.
 
+``` php
+/**
+ * Adds a column for action buttons.
+ *
+ * @param mixed|null   $value
+ * @param string|null  $align
+ * @param string|null  $class
+ * @param integer|null $cspan
+ * @param integer|null $rspan
+ * @param string|null  $style
+ * @param integer|null $width
+ *
+ * @return self
+ */
+public function withActions($value = 'Action', $align = null, $class = null, $cspan = null, $rspan = null, $style = null, $width = null)
 ```
-withAlpine($name = 'items', ...)
-```
-* Integrates the table with Alpine.js.
 
+``` php
+/**
+ * Enables usage of "alpine.js" in the table.
+ *
+ * @param string       $name
+ * @param string|null  $class
+ * @param string|null  $style
+ * @param integer|null $width
+ *
+ * @return self
+ */
+public function withAlpine($name = 'items', $class = null, $style = null, $width = null)
 ```
-withDeleteAction($clicked, $name = 'Delete')
-```
-* Adds a `Delete` action.
 
+``` php
+/**
+ * Adds a "Delete" action button.
+ *
+ * @param string $clicked
+ * @param string $name
+ *
+ * @return self
+ */
+public function withDeleteAction($clicked, $name = 'Delete')
 ```
-withLoading($count = 5, $name = 'loading')
-```
-* Adds a loading indicator.
 
+``` php
+/**
+ * Adds a loading indicator to the table.
+ *
+ * @param integer $count
+ * @param string  $name
+ *
+ * @return self
+ */
+public function withLoading($count = 5, $name = 'loading')
 ```
-withUpdateAction($clicked, $name = 'Update')
-```
-* Adds an `Update` action.
 
+``` php
+/**
+ * Adds an "Update" action button.
+ *
+ * @param string $clicked
+ * @param string $name
+ *
+ * @return self
+ */
+public function withUpdateAction($clicked, $name = 'Update')
 ```
-withEmptyText($text, $key = 'empty')
-```
-* Sets the text to display when there are no items in the table.
 
+``` php
+/**
+ * Sets the text to display when there are no items in the table.
+ *
+ * @param string $text
+ * @param string $key
+ *
+ * @return self
+ */
+public function withEmptyText($text, $key = 'empty')
 ```
-withErrorText($text, $key = 'loadError')
+
+``` php
+/**
+ * Sets the text to display when an error occurs while loading items.
+ *
+ * @param string $text
+ * @param string $key
+ *
+ * @return self
+ */
+public function withErrorText($text, $key = 'loadError')
 ```
-* Sets the text to display when an error occurs while loading items.
+
+``` php
+/**
+ * Sets the width of the last cell in percentage.
+ *
+ * @param integer $width
+ *
+ * @return self
+ */
+public function withWidth($width)
+```
 
 ## Changelog
 

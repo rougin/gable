@@ -12,6 +12,11 @@ class Loading
     /**
      * @var integer
      */
+    protected $cells = 0;
+
+    /**
+     * @var integer
+     */
     protected $count;
 
     /**
@@ -51,18 +56,17 @@ class Loading
     }
 
     /**
-     * @param string  $html
-     * @param integer $cells
+     * @param string $html
      *
      * @return string
      */
-    public function getHtml($html, $cells)
+    public function getHtml($html)
     {
         $html .= '<template x-if="items.length === 0 && ' . $this->name . '">';
         $html .= '<template x-data="{ length: items && items.length ? items.length : ' . $this->count . ' }" x-for="i in length">';
         $html .= '<tr>';
 
-        foreach (range(1, $cells) as $item)
+        foreach (range(1, $this->cells) as $item)
         {
             $html .= '<td class="align-middle placeholder-glow">';
             $html .= '<span class="placeholder col-12"></span>';
@@ -76,7 +80,7 @@ class Loading
         // Show "no items found" text if loading is enabled -------------------------
         $html .= '<template x-if="items.length === 0 && ' . $this->empty['name'] . '">';
         $html .= '<tr>';
-        $html .= '<td colspan="' . $cells . '" class="align-middle text-center">';
+        $html .= '<td colspan="' . $this->cells . '" class="align-middle text-center">';
         $html .= '<span>' . $this->empty['text'] . '</span>';
         $html .= '</td>';
         $html .= '</tr>';
@@ -86,7 +90,7 @@ class Loading
         // Show "loading error" text if there is an error when loading --------------------------
         $html .= '<template x-if="! ' . $this->name . ' && ' . $this->error['name'] . '">';
         $html .= '<tr>';
-        $html .= '<td colspan="' . $cells . '" class="align-middle text-center">';
+        $html .= '<td colspan="' . $this->cells . '" class="align-middle text-center">';
         $html .= '<span>' . $this->error['text'] . '</span>';
         $html .= '</td>';
         $html .= '</tr>';
@@ -102,6 +106,18 @@ class Loading
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param integer $cells
+     *
+     * @return self
+     */
+    public function setCells($cells)
+    {
+        $this->cells = $cells;
+
+        return $this;
     }
 
     /**

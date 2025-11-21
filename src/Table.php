@@ -24,9 +24,9 @@ class Table extends Element
     protected $actions = array();
 
     /**
-     * @var string|null
+     * @var \Rougin\Gable\Alpine|null
      */
-    protected $alpineName = null;
+    protected $alpine = null;
 
     /**
      * @var \Rougin\Gable\Badge[][]
@@ -91,17 +91,18 @@ class Table extends Element
 
         $html .= '<tbody>';
 
-        if ($this->alpineName && $this->loading)
+        if ($this->alpine && $this->loading)
         {
             $cells = count($this->cols[0]->getCells());
 
-            $html = $this->loading->getHtml($html, $cells);
+            $this->loading->setCells($cells);
+
+            $html = $this->loading->getHtml($html);
         }
 
-        if ($this->alpineName)
+        if ($this->alpine)
         {
-            $html .= '<template x-if="items && items.length > 0">';
-            $html .= '<template x-for="item in ' . $this->alpineName . '">';
+            $html .= $this->alpine->startItems();
         }
 
         foreach ($this->rows as $row)
@@ -109,10 +110,9 @@ class Table extends Element
             $html .= $row->toHtml();
         }
 
-        if ($this->alpineName)
+        if ($this->alpine)
         {
-            $html .= '</template>';
-            $html .= '</template>';
+            $html .= $this->alpine->endItems();
         }
 
         $html .= '</tbody>';
@@ -136,12 +136,12 @@ class Table extends Element
 
     /**
      * @param string $text
-     * @param string $condition
+     * @param string $state
      * @param string $class
      *
      * @return self
      */
-    public function addBadge($text, $condition, $class = 'text-bg-secondary')
+    public function addBadge($text, $state, $class = 'text-bg-secondary')
     {
         $lastRow = count($this->cols) - 1;
 
@@ -152,7 +152,9 @@ class Table extends Element
             $this->badges[$index] = array();
         }
 
-        $this->badges[$index][] = new Badge($text, $condition, $class);
+        $badge = new Badge($text, $state, $class);
+
+        $this->badges[$index][] = $badge;
 
         return $this;
     }
@@ -181,6 +183,8 @@ class Table extends Element
     }
 
     /**
+     * Adds a one-line custom HTML to the last added cell.
+     *
      * @param string $html
      *
      * @return self
@@ -202,6 +206,8 @@ class Table extends Element
     }
 
     /**
+     * Adds a new "<tr>" element to the "<thead>".
+     *
      * @param string|null  $class
      * @param string|null  $style
      * @param integer|null $width
@@ -218,6 +224,8 @@ class Table extends Element
     }
 
     /**
+     * Adds a new "<tr>" element to the "<tbody>".
+     *
      * @param string|null  $class
      * @param string|null  $style
      * @param integer|null $width
@@ -248,6 +256,8 @@ class Table extends Element
     }
 
     /**
+     * Adds a new "<td>" element.
+     *
      * @param mixed|null   $value
      * @param string|null  $align
      * @param string|null  $class
@@ -317,6 +327,8 @@ class Table extends Element
     }
 
     /**
+     * Adds a column for action buttons.
+     *
      * @param mixed|null   $value
      * @param string|null  $align
      * @param string|null  $class
@@ -345,7 +357,7 @@ class Table extends Element
     }
 
     /**
-     * TODO: This is a specific code for "alpinejs".
+     * Enables usage of "alpine.js" to the table.
      *
      * @param string       $name
      * @param string|null  $class
@@ -356,7 +368,7 @@ class Table extends Element
      */
     public function withAlpine($name = 'items', $class = null, $style = null, $width = null)
     {
-        $this->alpineName = $name;
+        $this->alpine = new Alpine($name);
 
         $col = $this->cols[count($this->cols) - 1];
 
@@ -379,30 +391,23 @@ class Table extends Element
 
             if ($index === $this->actionIndex)
             {
-                $html = '<div class="dropdown">';
-                $html .= '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">';
-                $html .= $cell->getName() ? $cell->getName() : 'Action' . (count($this->actions) > 1 ? 's' : '');
-                $html .= '</button>';
-                $html .= '<div class="dropdown-menu dropdown-menu-end">';
+                $this->alpine->setActions($this->actions);
+
+                $html = $this->alpine->startAction($cell);
 
                 $hasDanger = false;
 
                 foreach ($this->actions as $action)
                 {
-                    $danger = $action->isDanger() ? ' text-danger' : '';
+                    $html .= $action->getHtml($hasDanger);
 
                     if ($action->isDanger() && ! $hasDanger)
                     {
-                        $html .= '<div><hr class="dropdown-divider"></div>';
-
                         $hasDanger = true;
                     }
-
-                    $html .= '<div><a class="dropdown-item' . $danger . '" href="javascript:void(0)" @click="' . $action->onClick() . '">' . $action->getName() . '</a></div>';
                 }
 
-                $html .= '</div>';
-                $html .= '</div>';
+                $html .= $this->alpine->endAction();
 
                 $this->addCell($new->setValue($html));
 
@@ -426,6 +431,8 @@ class Table extends Element
     }
 
     /**
+     * Adds a "Delete" action button.
+     *
      * @param string $clicked
      * @param string $name
      *
@@ -447,6 +454,8 @@ class Table extends Element
     }
 
     /**
+     * Sets the text to display when there are no items in the table.
+     *
      * @param string $text
      * @param string $key
      *
@@ -465,6 +474,8 @@ class Table extends Element
     }
 
     /**
+     * Sets the text to display when an error occurs while loading items.
+     *
      * @param string $text
      * @param string $key
      *
@@ -483,7 +494,7 @@ class Table extends Element
     }
 
     /**
-     * TODO: This is a specific code for "alpinejs".
+     * Adds a loading indicator to the table.
      *
      * @param integer $count
      * @param string  $name
@@ -540,9 +551,14 @@ class Table extends Element
             throw new \Exception('"withLoading" disabled');
         }
 
+        if (! $this->alpine)
+        {
+            throw new \Exception('"withAlpine" disabled');
+        }
+
         $loading = $this->loading->getName();
 
-        $name = $this->alpineName;
+        $name = $this->alpine->getName();
 
         $this->withAttr(':class', '{ \'opacity-' . $value . '\': ' . $name . '.length > 0 && ' . $loading . '}');
 
@@ -550,6 +566,8 @@ class Table extends Element
     }
 
     /**
+     * Adds an "Update" action button.
+     *
      * @param string $clicked
      * @param string $name
      *

@@ -35,6 +35,31 @@ class Action
     }
 
     /**
+     * @param boolean $danger
+     *
+     * @return string
+     */
+    public function getHtml($danger = false)
+    {
+        // TODO: Replace with "StyleInterface" -----------
+        $hrClass = 'dropdown-divider';
+
+        $itemClass = 'dropdown-item';
+
+        $danger = $this->isDanger() ? ' text-danger' : '';
+        // -----------------------------------------------
+
+        $html = '';
+
+        if ($this->isDanger() && ! $danger)
+        {
+            $html .= '<div><hr class="' . $hrClass . '"></div>';
+        }
+
+        return $html . '<div><a class="' . $itemClass . $danger . '" href="javascript:void(0)" @click="' . $this->onClick() . '">' . $this->getName() . '</a></div>';
+    }
+
+    /**
      * @return string|null
      */
     public function getName()
