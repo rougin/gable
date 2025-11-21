@@ -1,13 +1,16 @@
 {
   "name": "rougin/gable",
   "description": "A simple HTML table generator in PHP.",
+  "keywords": [ "html-tables", "php-html", "php-tables" ],
   "homepage": "https://github.com/rougin/gable",
   "license": "MIT",
   "authors":
   [
     {
       "email": "rougingutib@gmail.com",
-      "name": "Rougin Gutib"
+      "homepage": "https://roug.in/",
+      "name": "Rougin Gutib",
+      "role": "Software Engineer"
     }
   ],
   "require":
