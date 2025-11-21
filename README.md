@@ -500,18 +500,18 @@ withUpdateAction($clicked, $name = 'Update')
 * Adds an `Update` action.
 
 ```
-withNoItemsText($text, $key = 'empty')
+withEmptyText($text, $key = 'empty')
 ```
 * Sets the text to display when there are no items in the table.
 
 ```
-withLoadErrorText($text, $key = 'loadError')
+withErrorText($text, $key = 'loadError')
 ```
 * Sets the text to display when an error occurs while loading items.
 
-## Change log
+## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more recent changes.
+Please see [CHANGELOG][link-changelog] for more recent changes.
 
 ## Contributing
 
@@ -530,7 +530,6 @@ The MIT License (MIT). Please see [LICENSE][link-license] for more information.
 [link-build]: https://github.com/rougin/gable/actions
 [link-changelog]: https://github.com/rougin/gable/blob/master/CHANGELOG.md
 [link-contributing]: https://github.com/rougin/gable/blob/master/CONTRIBUTING.md
-[link-contributors]: https://github.com/rougin/gable/contributors
 [link-coverage]: https://app.codecov.io/gh/rougin/gable
 [link-downloads]: https://packagist.org/packages/rougin/gable
 [link-license]: https://github.com/rougin/gable/blob/master/LICENSE.md

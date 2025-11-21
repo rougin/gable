@@ -49,34 +49,9 @@ class Table extends Element
     protected $htmls = array();
 
     /**
-     * @var integer
+     * @var \Rougin\Gable\Loading|null
      */
-    protected $loadingCount = 0;
-
-    /**
-     * @var string|null
-     */
-    protected $loadingName = null;
-
-    /**
-     * @var string
-     */
-    protected $noItemsKey = 'empty';
-
-    /**
-     * @var string
-     */
-    protected $noItemsText = 'No items found.';
-
-    /**
-     * @var string
-     */
-    protected $loadErrorKey = 'loadError';
-
-    /**
-     * @var string
-     */
-    protected $loadErrorText = 'An error occured in getting the items.';
+    protected $loading = null;
 
     /**
      * @var \Rougin\Gable\Row[]
@@ -116,44 +91,11 @@ class Table extends Element
 
         $html .= '<tbody>';
 
-        if ($this->alpineName && $this->loadingName)
+        if ($this->alpineName && $this->loading)
         {
             $cells = count($this->cols[0]->getCells());
 
-            $html .= '<template x-if="items.length === 0 && ' . $this->loadingName . '">';
-            $html .= '<template x-data="{ length: items && items.length ? items.length : ' . $this->loadingCount . ' }" x-for="i in length">';
-            $html .= '<tr>';
-
-            foreach (range(1, $cells) as $item)
-            {
-                $html .= '<td class="align-middle placeholder-glow">';
-                $html .= '<span class="placeholder col-12"></span>';
-                $html .= '</td>';
-            }
-
-            $html .= '</tr>';
-            $html .= '</template>';
-            $html .= '</template>';
-
-            // Show "no items found" text if loading is enabled -------------------------
-            $html .= '<template x-if="items.length === 0 && ' . $this->noItemsKey . '">';
-            $html .= '<tr>';
-            $html .= '<td colspan="' . $cells . '" class="align-middle text-center">';
-            $html .= '<span>' . $this->noItemsText . '</span>';
-            $html .= '</td>';
-            $html .= '</tr>';
-            $html .= '</template>';
-            // --------------------------------------------------------------------------
-
-            // Show "loading error" text if there is an error when loading --------------------------
-            $html .= '<template x-if="! ' . $this->loadingName . ' && ' . $this->loadErrorKey . '">';
-            $html .= '<tr>';
-            $html .= '<td colspan="' . $cells . '" class="align-middle text-center">';
-            $html .= '<span>' . $this->loadErrorText . '</span>';
-            $html .= '</td>';
-            $html .= '</tr>';
-            $html .= '</template>';
-            // --------------------------------------------------------------------------------------
+            $html = $this->loading->getHtml($html, $cells);
         }
 
         if ($this->alpineName)
@@ -510,11 +452,32 @@ class Table extends Element
      *
      * @return self
      */
-    public function withLoadErrorText($text, $key = 'loadError')
+    public function withEmptyText($text, $key = 'empty')
     {
-        $this->loadErrorKey = $key;
+        if (! $this->loading)
+        {
+            throw new \Exception('"withLoading" disabled');
+        }
 
-        $this->loadErrorText = $text;
+        $this->loading->withEmptyText($text, $key);
+
+        return $this;
+    }
+
+    /**
+     * @param string $text
+     * @param string $key
+     *
+     * @return self
+     */
+    public function withErrorText($text, $key = 'loadError')
+    {
+        if (! $this->loading)
+        {
+            throw new \Exception('"withLoading" disabled');
+        }
+
+        $this->loading->withErrorText($text, $key);
 
         return $this;
     }
@@ -529,9 +492,7 @@ class Table extends Element
      */
     public function withLoading($count = 5, $name = 'loading')
     {
-        $this->loadingCount = $count;
-
-        $this->loadingName = $name;
+        $this->loading = new Loading($count, $name);
 
         return $this;
     }
@@ -568,28 +529,18 @@ class Table extends Element
     }
 
     /**
-     * @param string $text
-     * @param string $key
-     *
-     * @return self
-     */
-    public function withNoItemsText($text, $key = 'empty')
-    {
-        $this->noItemsKey = $key;
-
-        $this->noItemsText = $text;
-
-        return $this;
-    }
-
-    /**
      * @param integer $value
      *
      * @return self
      */
     public function withOpacity($value)
     {
-        $loading = $this->loadingName;
+        if (! $this->loading)
+        {
+            throw new \Exception('"withLoading" disabled');
+        }
+
+        $loading = $this->loading->getName();
 
         $name = $this->alpineName;
 

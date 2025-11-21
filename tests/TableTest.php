@@ -150,9 +150,9 @@ class TableTest extends Testcase
 
         $table->withLoading();
 
-        $table->withNoItemsText('No records found.', 'noRecords');
+        $table->withEmptyText('No records found.', 'noRecords');
 
-        $table->withLoadErrorText('Failed to load.', 'loadFailed');
+        $table->withErrorText('Failed to load.', 'loadFailed');
 
         $expect = '<table><thead><tr><th>Name</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && noRecords"><tr><td colspan="1" class="align-middle text-center"><span>No records found.</span></td></tr></template><template x-if="! loading && loadFailed"><tr><td colspan="1" class="align-middle text-center"><span>Failed to load.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">name</button><div class="dropdown-menu dropdown-menu-end"></div></div></td></tr></template></template></tbody></table>';
 
