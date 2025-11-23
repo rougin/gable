@@ -8,6 +8,24 @@
 
 A simple HTML table generator in PHP.
 
+``` php
+use Rougin\Gable\Table;
+
+$table = new Table;
+
+$table->newColumn();
+$table->setCell('Name');
+$table->setCell('Age');
+
+$table->newRow();
+$table->setCell('John Doe');
+$table->setCell('30');
+
+$table->newRow();
+$table->setCell('Jane Doe');
+$table->setCell('28');
+```
+
 ## Installation
 
 Install the package using [Composer](https://getcomposer.org/):
@@ -333,6 +351,10 @@ use Rougin\Gable\Table;
 
 $table = new Table;
 
+// Requires "alpinejs" to be enabled ---
+$table->withAlpine();
+// -------------------------------------
+
 $table->newColumn();
 $table->setCell('Name');
 $table->setCell('Age');
@@ -351,10 +373,6 @@ $table->setCell('30');
 $table->newRow();
 $table->setCell('Jane Doe');
 $table->setCell('28');
-
-// Requires "alpinejs" to be enabled ---
-$table->withAlpine();
-// -------------------------------------
 
 echo $table;
 ```
@@ -412,6 +430,10 @@ use Rougin\Gable\Table;
 
 $table = new Table;
 
+// Requires "alpinejs" to be enabled ---
+$table->withAlpine();
+// -------------------------------------
+
 $table->newColumn();
 $table->setCell('Status')
   ->addBadge('Active', "item.status === 'active'", 'bg-success')
@@ -423,10 +445,6 @@ $table->newRow();
 $table->setCell('');
 // -----------------------------
 $table->setCell('John Doe');
-
-// Requires "alpinejs" to be enabled ---
-$table->withAlpine();
-// -------------------------------------
 
 echo $table;
 ```
