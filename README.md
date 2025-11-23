@@ -606,6 +606,17 @@ public function withErrorText($text, $key = 'loadError')
 
 ``` php
 /**
+ * Sets a name identifier to the last column cell.
+ *
+ * @param string $name
+ *
+ * @return self
+ */
+public function withName($name)
+```
+
+``` php
+/**
  * Sets the width of the last cell in percentage.
  *
  * @param integer $width

@@ -509,32 +509,21 @@ class Table extends Element
     }
 
     /**
+     * Sets a name identifier to the last column cell.
+     *
      * @param string $name
      *
      * @return self
      */
     public function withName($name)
     {
-        if ($this->type === self::TYPE_COL)
-        {
-            $index = count($this->cols) - 1;
+        $index = count($this->cols) - 1;
 
-            $cell = $this->cols[$index]->getLast();
-
-            $cell->setName($name);
-
-            $this->cols[$index]->setLast($cell);
-
-            return $this;
-        }
-
-        $index = count($this->rows) - 1;
-
-        $cell = $this->rows[$index]->getLast();
+        $cell = $this->cols[$index]->getLast();
 
         $cell->setName($name);
 
-        $this->rows[$index]->setLast($cell);
+        $this->cols[$index]->setLast($cell);
 
         return $this;
     }
