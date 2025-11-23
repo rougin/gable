@@ -92,19 +92,11 @@ class TableTest extends Testcase
 
         $table->setCell('Name');
 
-        // Enable Alpine.js for badges to render ---
+        // Enable "alpinejs" for badges to render ---
         $table->withAlpine('items');
-        // -----------------------------------------
+        // ------------------------------------------
 
-        $table->newRow();
-
-        // Placeholder for the badge ---
-        $table->setCell('');
-        // -----------------------------
-
-        $table->setCell('John Doe');
-
-        $expect = '<table><thead><tr><th>Status</th><th>Name</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td><template x-if="item.status === \'active\'"><span class="badge rounded-pill text-uppercase bg-success">Active</span></template><template x-if="item.status === \'inactive\'"><span class="badge rounded-pill text-uppercase bg-danger">Inactive</span></template></td><td x-text="item.name"></td></tr><tr><td></td><td>John Doe</td></tr></template></template></tbody></table>';
+        $expect = '<table><thead><tr><th>Status</th><th>Name</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td><template x-if="item.status === \'active\'"><span class="badge rounded-pill text-uppercase bg-success">Active</span></template><template x-if="item.status === \'inactive\'"><span class="badge rounded-pill text-uppercase bg-danger">Inactive</span></template></td><td x-text="item.name"></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();
@@ -328,11 +320,13 @@ class TableTest extends Testcase
 
         $table->withDeleteAction('delete(item.id)');
 
-        $table->newRow()->setCell('John Doe')->setCell('30');
+        $table->newRow();
+        $table->setCell('John Doe')->setCell('30');
 
-        $table->newRow()->setCell('Jane Doe')->setCell('28');
+        $table->newRow();
+        $table->setCell('Jane Doe')->setCell('28');
 
-        $expect = '<table><thead><tr><th>Name</th><th>Age</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">name</button><div class="dropdown-menu dropdown-menu-end"></div></div></td><td x-text="item.age"></td><td>Action</td></tr><tr><td>John Doe</td><td>30</td></tr><tr><td>Jane Doe</td><td>28</td></tr></template></template></tbody></table>';
+        $expect = '<table><thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td>John Doe</td><td>30</td></tr><tr><td>Jane Doe</td><td>28</td></tr><tr><td x-text="item.name"></td><td x-text="item.age"></td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div></div></div></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();

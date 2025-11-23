@@ -68,58 +68,7 @@ class Table extends Element
      */
     public function __toString()
     {
-        $html = '<table ' . $this->getParsedAttrs() . '>';
-
-        if (count($this->cols) > 0)
-        {
-            $html .= '<thead>';
-
-            foreach ($this->cols as $col)
-            {
-                $html .= $col->toHtml('th');
-            }
-
-            $html .= '</thead>';
-        }
-
-        if (count($this->rows) === 0)
-        {
-            $html .= '</table>';
-
-            return str_replace('<table >', '<table>', $html);
-        }
-
-        $html .= '<tbody>';
-
-        if ($this->alpine && $this->loading)
-        {
-            $cells = count($this->cols[0]->getCells());
-
-            $this->loading->setCells($cells);
-
-            $html = $this->loading->getHtml($html);
-        }
-
-        if ($this->alpine)
-        {
-            $html .= $this->alpine->startItems();
-        }
-
-        foreach ($this->rows as $row)
-        {
-            $html .= $row->toHtml();
-        }
-
-        if ($this->alpine)
-        {
-            $html .= $this->alpine->endItems();
-        }
-
-        $html .= '</tbody>';
-
-        $html .= '</table>';
-
-        return str_replace('<table >', '<table>', $html);
+        return $this->toHtml();
     }
 
     /**
@@ -327,6 +276,67 @@ class Table extends Element
     }
 
     /**
+     * @return string
+     */
+    public function toHtml()
+    {
+        $this->setRows();
+
+        $html = '<table ' . $this->getParsedAttrs() . '>';
+
+        if (count($this->cols) > 0)
+        {
+            $html .= '<thead>';
+
+            foreach ($this->cols as $col)
+            {
+                $html .= $col->toHtml('th');
+            }
+
+            $html .= '</thead>';
+        }
+
+        if (count($this->rows) === 0)
+        {
+            $html .= '</table>';
+
+            return str_replace('<table >', '<table>', $html);
+        }
+
+        $html .= '<tbody>';
+
+        if ($this->alpine && $this->loading)
+        {
+            $cells = count($this->cols[0]->getCells());
+
+            $this->loading->setCells($cells);
+
+            $html = $this->loading->getHtml($html);
+        }
+
+        if ($this->alpine)
+        {
+            $html .= $this->alpine->startItems();
+        }
+
+        foreach ($this->rows as $row)
+        {
+            $html .= $row->toHtml();
+        }
+
+        if ($this->alpine)
+        {
+            $html .= $this->alpine->endItems();
+        }
+
+        $html .= '</tbody>';
+
+        $html .= '</table>';
+
+        return str_replace('<table >', '<table>', $html);
+    }
+
+    /**
      * Adds a column for action buttons.
      *
      * @param mixed|null   $value
@@ -359,73 +369,13 @@ class Table extends Element
     /**
      * Enables usage of "alpine.js" to the table.
      *
-     * @param string       $name
-     * @param string|null  $class
-     * @param string|null  $style
-     * @param integer|null $width
+     * @param string $name
      *
      * @return self
      */
-    public function withAlpine($name = 'items', $class = null, $style = null, $width = null)
+    public function withAlpine($name = 'items')
     {
         $this->alpine = new Alpine($name);
-
-        $col = $this->cols[count($this->cols) - 1];
-
-        $this->newRow($class, $style, $width);
-
-        foreach ($col->getCells() as $index => $cell)
-        {
-            $hasBadges = array_key_exists($index, $this->badges);
-
-            $hasHtml = array_key_exists($index, $this->htmls);
-
-            $new = new Cell(null, null, $class, null, null, $style, $width);
-
-            // Add badges to the specified column cell ---
-            if ($hasBadges)
-            {
-                $new->setBadges($this->badges[$index]);
-            }
-            // -------------------------------------------
-
-            if ($index === $this->actionIndex)
-            {
-                $this->alpine->setActions($this->actions);
-
-                $html = $this->alpine->startAction($cell);
-
-                $hasDanger = false;
-
-                foreach ($this->actions as $action)
-                {
-                    if ($action->isDanger() && ! $hasDanger)
-                    {
-                        $hasDanger = true;
-                    }
-
-                    $html .= $action->getHtml($hasDanger);
-                }
-
-                $html .= $this->alpine->endAction();
-
-                $this->addCell($new->setValue($html));
-
-                continue;
-            }
-
-            if (! $hasBadges && ! $hasHtml)
-            {
-                $new->withAttr('x-text', 'item.' . $cell->getName());
-            }
-
-            if (! $hasBadges && $hasHtml)
-            {
-                $new->setValue(implode('', $this->htmls[$index]));
-            }
-
-            $this->addCell($new);
-        }
 
         return $this;
     }
@@ -606,5 +556,73 @@ class Table extends Element
         $this->rows[$index]->setLast($cell);
 
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    protected function setRows()
+    {
+        if (! $this->alpine)
+        {
+            return;
+        }
+
+        $col = $this->cols[count($this->cols) - 1];
+
+        $this->newRow();
+
+        foreach ($col->getCells() as $index => $cell)
+        {
+            $badges = array_key_exists($index, $this->badges);
+
+            $html = array_key_exists($index, $this->htmls);
+
+            $new = new Cell;
+
+            // Add badges to the specified column cell ---
+            if ($badges)
+            {
+                $new->setBadges($this->badges[$index]);
+            }
+            // -------------------------------------------
+
+            if ($index === $this->actionIndex)
+            {
+                $this->alpine->setActions($this->actions);
+
+                $html = $this->alpine->startAction($cell);
+
+                $hasDanger = false;
+
+                foreach ($this->actions as $action)
+                {
+                    if ($action->isDanger() && ! $hasDanger)
+                    {
+                        $hasDanger = true;
+                    }
+
+                    $html .= $action->getHtml($hasDanger);
+                }
+
+                $html .= $this->alpine->endAction();
+
+                $this->addCell($new->setValue($html));
+
+                continue;
+            }
+
+            if (! $badges && ! $html)
+            {
+                $new->withAttr('x-text', 'item.' . $cell->getName());
+            }
+
+            if (! $badges && $html)
+            {
+                $new->setValue(implode('', $this->htmls[$index]));
+            }
+
+            $this->addCell($new);
+        }
     }
 }
