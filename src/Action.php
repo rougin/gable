@@ -51,7 +51,7 @@ class Action
 
         $html = '';
 
-        if ($this->isDanger() && ! $danger)
+        if ($danger)
         {
             $html .= '<div><hr class="' . $hrClass . '"></div>';
         }

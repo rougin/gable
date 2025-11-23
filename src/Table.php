@@ -399,12 +399,12 @@ class Table extends Element
 
                 foreach ($this->actions as $action)
                 {
-                    $html .= $action->getHtml($hasDanger);
-
                     if ($action->isDanger() && ! $hasDanger)
                     {
                         $hasDanger = true;
                     }
+
+                    $html .= $action->getHtml($hasDanger);
                 }
 
                 $html .= $this->alpine->endAction();
