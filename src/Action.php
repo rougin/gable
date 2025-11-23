@@ -10,14 +10,14 @@ namespace Rougin\Gable;
 class Action
 {
     /**
-     * @var string|null
-     */
-    protected $action = null;
-
-    /**
      * @var boolean
      */
     protected $danger = false;
+
+    /**
+     * @var string|null
+     */
+    protected $event = null;
 
     /**
      * @var string|null
@@ -68,13 +68,13 @@ class Action
     }
 
     /**
-     * @param string $action
+     * @param string $event
      *
      * @return self
      */
-    public function ifClicked($action)
+    public function ifClicked($event)
     {
-        $this->action = $action;
+        $this->event = $event;
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Action
      */
     public function onClick()
     {
-        return $this->action;
+        return $this->event;
     }
 
     /**

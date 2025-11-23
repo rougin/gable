@@ -15,6 +15,7 @@ class TableTest extends Testcase
     public function test_all_features()
     {
         $table = new Table;
+        $table->withAlpine();
         $table->setClass('table mb-0');
         $table->newColumn();
 
@@ -37,7 +38,6 @@ class TableTest extends Testcase
         $table->withLoading(10);
         $table->withEmptyText('No clients found.');
         $table->withErrorText('An error occured in getting the clients.');
-        $table->withAlpine();
         $table->withOpacity(50);
 
         $expect = '<table class="table mb-0" :class="{ \'opacity-50\': items.length > 0 && loading}"><thead><tr><th align="left" width="5%">Type</th><th align="left" width="22%">Client Name</th><th align="left" width="15%">Remarks</th><th align="left" width="13%">Created At</th><th align="left" width="13%">Updated At</th><th align="left" width="5%"></th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 10 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && empty"><tr><td colspan="6" class="align-middle text-center"><span>No clients found.</span></td></tr></template><template x-if="! loading && loadError"><tr><td colspan="6" class="align-middle text-center"><span>An error occured in getting the clients.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td><template x-if="item.type === 0"><span class="badge rounded-pill text-uppercase text-bg-success">Customer</span></template><template x-if="item.type === 1"><span class="badge rounded-pill text-uppercase text-bg-primary">Supplier</span></template></td><td><p class="mb-0" x-text="item.name"></p><p class="mb-0 small text-muted" x-text="item.code"></p></td><td><p class="mb-0 fst-italic" x-text="item.remarks"></p></td><td x-text="item.created_at"></td><td x-text="item.updated_at"></td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Actions</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="javascript:void(0)" @click="edit(item)">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="trash(item)">Delete</a></div></div></div></td></tr></template></template></tbody></table>';
@@ -274,25 +274,34 @@ class TableTest extends Testcase
         // Arrange
         $table = new Table;
 
-        $table->newColumn(); // First column definition
+        $table->newColumn();
 
-        $table->setCell('ID')->withName('id');
-
-        $table->newColumn(); // Second column definition
-
-        $table->setCell('Name')->withName('name');
-
-        $table->setCell('Age')->withName('age');
+        $table->setCell('ID');
+        $table->setCell('Name');
+        $table->setCell('Age');
 
         $data = array();
-        $data[] = array('id' => 1, 'name' => 'Alice', 'age' => 25);
-        $data[] = array('id' => 2, 'name' => 'Bob', 'age' => 30);
+
+        $item = array('id' => 1);
+        $item['age'] = 25;
+        $item['name'] = 'Alice';
+        $data[] = $item;
+
+        $item = array('id' => 2);
+        $item['age'] = 30;
+        $item['name'] = 'Bob';
+        $data[] = $item;
+
+        // Item without "age" ---
+        $item = array('id' => 3);
+        $item['name'] = 'George';
+        $data[] = $item;
+        // ----------------------
 
         // Act
         $table->setData($data);
 
-        // Expected HTML based on the corrected setData logic
-        $expect = '<table><thead><tr><th>ID</th></tr><tr><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>1</td><td>Alice</td><td>25</td></tr><tr><td>2</td><td>Bob</td><td>30</td></tr></tbody></table>';
+        $expect = '<table><thead><tr><th>ID</th><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>1</td><td>Alice</td><td>25</td></tr><tr><td>2</td><td>Bob</td><td>30</td></tr><tr><td>3</td><td>George</td><td></td></tr></tbody></table>';
 
         $actual = $table->__toString();
 
@@ -385,5 +394,69 @@ class TableTest extends Testcase
 
         // Assert
         $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_opacity_without_all()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->withOpacity(50);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_opacity_without_alpine()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->withLoading()->withOpacity(50);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_empty_text_without_loading()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->withAlpine();
+
+        $text = 'No items found.';
+
+        $table->withEmptyText($text);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_error_text_without_loading()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->withAlpine();
+
+        $text = 'An error occured in getting the items.';
+
+        $table->withErrorText($text);
     }
 }

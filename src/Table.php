@@ -14,11 +14,6 @@ class Table extends Element
     const TYPE_ROW = 1;
 
     /**
-     * @var integer
-     */
-    protected $actionIndex = 0;
-
-    /**
      * @var \Rougin\Gable\Action[]
      */
     protected $actions = array();
@@ -39,14 +34,16 @@ class Table extends Element
     protected $cols = array();
 
     /**
-     * @var boolean
-     */
-    protected $hasAction = false;
-
-    /**
      * @var string[][]
      */
     protected $htmls = array();
+
+    /**
+     * Index of the "Action" column.
+     *
+     * @var integer
+     */
+    protected $index = 0;
 
     /**
      * @var \Rougin\Gable\Loading|null
@@ -353,14 +350,12 @@ class Table extends Element
     {
         $this->setCell($value, $align, $class, $cspan, $rspan, $style, $width);
 
-        $this->hasAction = true;
-
         // Get the last cell as the action's index ---
         $index = count($this->cols) - 1;
 
         $cells = $this->cols[$index]->getCells();
 
-        $this->actionIndex = count($cells) - 1;
+        $this->index = count($cells) - 1;
         // -------------------------------------------
 
         return $this;
@@ -587,7 +582,7 @@ class Table extends Element
             }
             // -------------------------------------------
 
-            if ($index === $this->actionIndex)
+            if ($index === $this->index)
             {
                 $this->alpine->setActions($this->actions);
 
