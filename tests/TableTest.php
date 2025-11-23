@@ -177,6 +177,35 @@ class TableTest extends Testcase
     /**
      * @return void
      */
+    public function test_empty_cells()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn();
+        $table->setCell('Name');
+        $table->setCell('Age');
+
+        $table->newRow();
+        $table->setCell('John Doe');
+        $table->setCell('30');
+
+        $table->newRow();
+        $table->setEmptyCell();
+        $table->setEmptyCell();
+
+        $expect = '<table><thead><tr><th>Name</th><th>Age</th></tr></thead><tbody><tr><td>John Doe</td><td>30</td></tr><tr><td></td><td></td></tr></tbody></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
     public function test_no_items_and_error_text()
     {
         // Arrange
