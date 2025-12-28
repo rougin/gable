@@ -36,7 +36,7 @@ $ composer require rougin/gable
 
 ## Basic usage
 
-The `Table` class is the cornerstone of this package, providing a simple and intuitive API for generating HTML tables:
+Use the `Table` class for generating HTML tables:
 
 ``` php
 // index.php
@@ -91,7 +91,7 @@ The code above will generate the following HTML output:
 
 ## Method chaining
 
-For a more fluent and expressive way of building tables, method chaining is also supported:
+Using method chaining is recommended for a fluent and expressive way of building tables:
 
 ``` php
 // index.php
