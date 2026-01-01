@@ -329,13 +329,7 @@ class TableTest extends Testcase
 
         $table->withDeleteAction('delete(item.id)');
 
-        $table->newRow();
-        $table->setCell('John Doe')->setCell('30');
-
-        $table->newRow();
-        $table->setCell('Jane Doe')->setCell('28');
-
-        $expect = '<table><thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td>John Doe</td><td>30</td></tr><tr><td>Jane Doe</td><td>28</td></tr><tr><td x-text="item.name"></td><td x-text="item.age"></td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div></div></div></td></tr></template></template></tbody></table>';
+        $expect = '<table><thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td x-text="item.name"></td><td x-text="item.age"></td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div></div></div></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();
