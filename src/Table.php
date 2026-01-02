@@ -89,9 +89,9 @@ class Table extends Element
      */
     public function addBadge($text, $state, $class = 'text-bg-secondary')
     {
-        $lastRow = count($this->cols) - 1;
+        $last = count($this->cols) - 1;
 
-        $index = $this->cols[$lastRow]->getLastIndex();
+        $index = $this->cols[$last]->getLastIndex();
 
         if (! array_key_exists($index, $this->badges))
         {
@@ -137,9 +137,9 @@ class Table extends Element
      */
     public function addHtml($html)
     {
-        $lastRow = count($this->cols) - 1;
+        $last = count($this->cols) - 1;
 
-        $index = $this->cols[$lastRow]->getLastIndex();
+        $index = $this->cols[$last]->getLastIndex();
 
         if (! array_key_exists($index, $this->htmls))
         {
@@ -277,7 +277,10 @@ class Table extends Element
      */
     public function toHtml()
     {
-        $this->setRows();
+        if ($this->alpine)
+        {
+            $this->setRows();
+        }
 
         $html = '<table ' . $this->getParsedAttrs() . '>';
 
@@ -293,12 +296,14 @@ class Table extends Element
             $html .= '</thead>';
         }
 
+        // Return <table> if no rows provided ---------------
         if (count($this->rows) === 0)
         {
             $html .= '</table>';
 
             return str_replace('<table >', '<table>', $html);
         }
+        // --------------------------------------------------
 
         $html .= '<tbody>';
 
@@ -558,12 +563,9 @@ class Table extends Element
      */
     protected function setRows()
     {
-        if (! $this->alpine)
-        {
-            return;
-        }
+        $index = count($this->cols) - 1;
 
-        $col = $this->cols[count($this->cols) - 1];
+        $col = $this->cols[$index];
 
         $this->newRow();
 

@@ -203,11 +203,11 @@ class TableTest extends Testcase
         // Arrange
         $table = new Table;
 
-        $table->newColumn(); // Added this line
-
-        $table->setCell('Name'); // Added this line
-
         $table->withAlpine('users');
+
+        $table->newColumn();
+
+        $table->setCell('Name');
 
         $table->withLoading();
 
@@ -371,11 +371,11 @@ class TableTest extends Testcase
         // Arrange
         $table = new Table;
 
-        $table->newColumn(); // Added this line
-
-        $table->setCell('Name'); // Added this line
-
         $table->withAlpine('users');
+
+        $table->newColumn();
+
+        $table->setCell('Name');
 
         $table->withLoading();
 
