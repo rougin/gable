@@ -45,7 +45,11 @@ class Badge
     {
         $item = '<template x-if="' . $this->condition . '">';
 
-        $item .= '<span class="badge rounded-pill text-uppercase ' . $this->class . '">' . $this->text . '</span>';
+        // TODO: Replace with "StyleInterface" ----------------------
+        $class = 'badge rounded-pill text-uppercase ' . $this->class;
+        // ----------------------------------------------------------
+
+        $item .= '<span class="' . $class . '">' . $this->text . '</span>';
 
         return $item . '</template>';
     }

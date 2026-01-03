@@ -351,10 +351,6 @@ use Rougin\Gable\Table;
 
 $table = new Table;
 
-// Requires "alpinejs" to be enabled ---
-$table->withAlpine();
-// -------------------------------------
-
 $table->newColumn();
 $table->setCell('Name');
 $table->setCell('Age');
@@ -363,8 +359,8 @@ $table->setCell('Age');
 $table->withActions();
 // ---------------------------
 
-$table->withUpdateAction('update(item.id)');
-$table->withDeleteAction('delete(item.id)');
+$table->withUpdateAction('https://roug.in/update');
+$table->withDeleteAction('https://roug.in/delete');
 
 $table->newRow();
 $table->setCell('John Doe');
@@ -394,9 +390,9 @@ echo $table;
         <div class="dropdown">
           <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
           <div class="dropdown-menu dropdown-menu-end">
-            <div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div>
+            <div><a class="dropdown-item" href="https://roug.in/update">Update</a></div>
             <div><hr class="dropdown-divider"></div>
-            <div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div>
+            <div><a class="dropdown-item text-danger" href="https://roug.in/delete">Delete</a></div>
           </div>
         </div>
       </td>
@@ -408,13 +404,80 @@ echo $table;
         <div class="dropdown">
           <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
           <div class="dropdown-menu dropdown-menu-end">
-            <div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div>
+            <div><a class="dropdown-item" href="https://roug.in/update">Update</a></div>
             <div><hr class="dropdown-divider"></div>
-            <div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div>
+            <div><a class="dropdown-item text-danger" href="https://roug.in/delete">Delete</a></div>
           </div>
         </div>
       </td>
     </tr>
+  </tbody>
+</table>
+```
+
+If `withAlpine` is defined, each action is defined by `@click` attribute instead of `href`:
+
+``` php
+// index.php
+
+use Rougin\Gable\Table;
+
+$table = new Table;
+
+// Uses "alpinejs" to the table ---
+$table->withAlpine();
+// --------------------------------
+
+$table->newColumn();
+$table->setCell('Name');
+$table->setCell('Age');
+
+// Adds an "Action" column ---
+$table->withActions();
+// ---------------------------
+
+// Methods will be used instead of links ---
+$table->withUpdateAction('update(item.id)');
+$table->withDeleteAction('delete(item.id)');
+// -----------------------------------------
+
+echo $table;
+```
+
+``` html
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <template x-if="items && items.length > 0">
+      <template x-for="item in items">
+        <tr>
+          <td x-text="item.name"></td>
+          <td x-text="item.age"></td>
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button>
+              <div class="dropdown-menu dropdown-menu-end">
+                <div>
+                  <a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a>
+                </div>
+                <div>
+                  <hr class="dropdown-divider">
+                </div>
+                <div>
+                  <a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </template>
+    </template>
   </tbody>
 </table>
 ```
@@ -566,12 +629,12 @@ public function withAlpine($name = 'items', $class = null, $style = null, $width
 /**
  * Adds a "Delete" action button.
  *
- * @param string $clicked
+ * @param string $action
  * @param string $name
  *
  * @return self
  */
-public function withDeleteAction($clicked, $name = 'Delete')
+public function withDeleteAction($action, $name = 'Delete')
 ```
 
 ``` php
@@ -590,12 +653,12 @@ public function withLoading($count = 5, $name = 'loading')
 /**
  * Adds an "Update" action button.
  *
- * @param string $clicked
+ * @param string $action
  * @param string $name
  *
  * @return self
  */
-public function withUpdateAction($clicked, $name = 'Update')
+public function withUpdateAction($action, $name = 'Update')
 ```
 
 ``` php

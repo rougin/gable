@@ -30,14 +30,6 @@ class Alpine
     /**
      * @return string
      */
-    public function endAction()
-    {
-        return '</div></div>';
-    }
-
-    /**
-     * @return string
-     */
     public function endItems()
     {
         return '</template></template>';
@@ -49,34 +41,6 @@ class Alpine
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param \Rougin\Gable\Action[] $actions
-     *
-     * @return self
-     */
-    public function setActions($actions)
-    {
-        $this->actions = $actions;
-
-        return $this;
-    }
-
-    /**
-     * @param \Rougin\Gable\Cell $cell
-     *
-     * @return string
-     */
-    public function startAction(Cell $cell)
-    {
-        $html = '<div class="dropdown">';
-        $html .= '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">';
-        $html .= $cell->getName() ? $cell->getName() : 'Action' . (count($this->actions) > 1 ? 's' : '');
-        $html .= '</button>';
-        $html .= '<div class="dropdown-menu dropdown-menu-end">';
-
-        return $html;
     }
 
     /**

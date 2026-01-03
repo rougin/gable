@@ -67,7 +67,7 @@ class TableTest extends Testcase
 
         $table->withLoading();
 
-        $expect = '<table><thead><tr><th>Name</th><th>Email</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && empty"><tr><td colspan="2" class="align-middle text-center"><span>No items found.</span></td></tr></template><template x-if="! loading && loadError"><tr><td colspan="2" class="align-middle text-center"><span>An error occured in getting the items.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">name</button><div class="dropdown-menu dropdown-menu-end"></div></div></td><td x-text="item.email"></td></tr></template></template></tbody></table>';
+        $expect = '<table><thead><tr><th>Name</th><th>Email</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && empty"><tr><td colspan="2" class="align-middle text-center"><span>No items found.</span></td></tr></template><template x-if="! loading && loadError"><tr><td colspan="2" class="align-middle text-center"><span>An error occured in getting the items.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td x-text="item.name"></td><td x-text="item.email"></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();
@@ -215,7 +215,7 @@ class TableTest extends Testcase
 
         $table->withErrorText('Failed to load.', 'loadFailed');
 
-        $expect = '<table><thead><tr><th>Name</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && noRecords"><tr><td colspan="1" class="align-middle text-center"><span>No records found.</span></td></tr></template><template x-if="! loading && loadFailed"><tr><td colspan="1" class="align-middle text-center"><span>Failed to load.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">name</button><div class="dropdown-menu dropdown-menu-end"></div></div></td></tr></template></template></tbody></table>';
+        $expect = '<table><thead><tr><th>Name</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && noRecords"><tr><td colspan="1" class="align-middle text-center"><span>No records found.</span></td></tr></template><template x-if="! loading && loadFailed"><tr><td colspan="1" class="align-middle text-center"><span>Failed to load.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td x-text="item.name"></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();
@@ -319,6 +319,39 @@ class TableTest extends Testcase
 
         $table->newColumn()->setCell('Name')->setCell('Age');
 
+        $table->withActions();
+
+        $table->withUpdateAction('https://roug.in/update');
+
+        $table->withDeleteAction('https://roug.in/delete');
+
+        $table->newRow();
+        $table->setCell('John Doe');
+        $table->setCell('30');
+
+        $table->newRow();
+        $table->setCell('Jane Doe');
+        $table->setCell('28');
+
+        $expect = '<table><thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead><tbody><tr><td>John Doe</td><td>30</td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="https://roug.in/update">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="https://roug.in/delete">Delete</a></div></div></div></td></tr><tr><td>Jane Doe</td><td>28</td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="https://roug.in/update">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="https://roug.in/delete">Delete</a></div></div></div></td></tr></tbody></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_actions_as_alpine()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn()->setCell('Name')->setCell('Age');
+
         // Enable Alpine.js for actions to render ---
         $table->withAlpine('items');
         // ------------------------------------------
@@ -329,7 +362,7 @@ class TableTest extends Testcase
 
         $table->withDeleteAction('delete(item.id)');
 
-        $expect = '<table><thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td x-text="item.name"></td><td x-text="item.age"></td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div></div></div></td></tr></template></template></tbody></table>';
+        $expect = '<table><thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead><tbody><template x-if="items && items.length > 0"><template x-for="item in items"><tr><td x-text="item.name"></td><td x-text="item.age"></td><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">Action</button><div class="dropdown-menu dropdown-menu-end"><div><a class="dropdown-item" href="javascript:void(0)" @click="update(item.id)">Update</a></div><div><hr class="dropdown-divider"></div><div><a class="dropdown-item text-danger" href="javascript:void(0)" @click="delete(item.id)">Delete</a></div></div></div></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();
@@ -381,7 +414,7 @@ class TableTest extends Testcase
 
         $table->withOpacity(50);
 
-        $expect = '<table :class="{ \'opacity-50\': users.length > 0 && loading}"><thead><tr><th>Name</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && empty"><tr><td colspan="1" class="align-middle text-center"><span>No items found.</span></td></tr></template><template x-if="! loading && loadError"><tr><td colspan="1" class="align-middle text-center"><span>An error occured in getting the items.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td><div class="dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">name</button><div class="dropdown-menu dropdown-menu-end"></div></div></td></tr></template></template></tbody></table>';
+        $expect = '<table :class="{ \'opacity-50\': users.length > 0 && loading}"><thead><tr><th>Name</th></tr></thead><tbody><template x-if="items.length === 0 && loading"><template x-data="{ length: items && items.length ? items.length : 5 }" x-for="i in length"><tr><td class="align-middle placeholder-glow"><span class="placeholder col-12"></span></td></tr></template></template><template x-if="items.length === 0 && empty"><tr><td colspan="1" class="align-middle text-center"><span>No items found.</span></td></tr></template><template x-if="! loading && loadError"><tr><td colspan="1" class="align-middle text-center"><span>An error occured in getting the items.</span></td></tr></template><template x-if="items && items.length > 0"><template x-for="item in users"><tr><td x-text="item.name"></td></tr></template></template></tbody></table>';
 
         // Act
         $actual = $table->__toString();

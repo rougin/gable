@@ -323,6 +323,21 @@ class Table extends Element
 
         foreach ($this->rows as $row)
         {
+            if (! $this->alpine && count($this->actions) > 0)
+            {
+                // Return the last cell from column -----
+                $index = count($this->cols) - 1;
+
+                $cells = $this->cols[$index]->getCells();
+
+                $cell = $cells[$this->index];
+                // --------------------------------------
+
+                $temp = Action::setMenu($cell, $this->actions);
+
+                $row->addCell(new Cell($temp));
+            }
+
             $html .= $row->toHtml();
         }
 
@@ -383,22 +398,31 @@ class Table extends Element
     /**
      * Adds a "Delete" action button.
      *
-     * @param string $clicked
+     * @param string $action
      * @param string $name
      *
      * @return self
      */
-    public function withDeleteAction($clicked, $name = 'Delete')
+    public function withDeleteAction($action, $name = 'Delete')
     {
-        $action = new Action;
+        $item = new Action;
 
-        $action->setName($name);
+        $item->setName($name);
 
-        $action->ifClicked($clicked);
+        if ($this->alpine)
+        {
+            $item->withAlpine();
 
-        $action->asDanger();
+            $item->ifClicked($action);
+        }
+        else
+        {
+            $item->setLink($action);
+        }
 
-        $this->addAction($action);
+        $item->asDanger();
+
+        $this->addAction($item);
 
         return $this;
     }
@@ -507,20 +531,29 @@ class Table extends Element
     /**
      * Adds an "Update" action button.
      *
-     * @param string $clicked
+     * @param string $action
      * @param string $name
      *
      * @return self
      */
-    public function withUpdateAction($clicked, $name = 'Update')
+    public function withUpdateAction($action, $name = 'Update')
     {
-        $action = new Action;
+        $item = new Action;
 
-        $action->setName($name);
+        $item->setName($name);
 
-        $action->ifClicked($clicked);
+        if ($this->alpine)
+        {
+            $item->withAlpine();
 
-        $this->addAction($action);
+            $item->ifClicked($action);
+        }
+        else
+        {
+            $item->setLink($action);
+        }
+
+        $this->addAction($item);
 
         return $this;
     }
@@ -584,27 +617,11 @@ class Table extends Element
             }
             // -------------------------------------------
 
-            if ($index === $this->index)
+            if ($index === $this->index && count($this->actions) > 0)
             {
-                $this->alpine->setActions($this->actions);
+                $temp = Action::setMenu($cell, $this->actions);
 
-                $html = $this->alpine->startAction($cell);
-
-                $hasDanger = false;
-
-                foreach ($this->actions as $action)
-                {
-                    if ($action->isDanger() && ! $hasDanger)
-                    {
-                        $hasDanger = true;
-                    }
-
-                    $html .= $action->getHtml($hasDanger);
-                }
-
-                $html .= $this->alpine->endAction();
-
-                $this->addCell($new->setValue($html));
+                $this->addCell($new->setValue($temp));
 
                 continue;
             }
