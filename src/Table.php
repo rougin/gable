@@ -81,13 +81,13 @@ class Table extends Element
     }
 
     /**
-     * @param string $text
-     * @param string $state
-     * @param string $class
+     * @param string      $text
+     * @param string      $class
+     * @param string|null $state
      *
      * @return self
      */
-    public function addBadge($text, $state, $class = 'text-bg-secondary')
+    public function addBadge($text, $class = 'text-bg-secondary', $state = null)
     {
         $last = count($this->cols) - 1;
 
@@ -98,7 +98,7 @@ class Table extends Element
             $this->badges[$index] = array();
         }
 
-        $badge = new Badge($text, $state, $class);
+        $badge = new Badge($text, $class, $state);
 
         $this->badges[$index][] = $badge;
 

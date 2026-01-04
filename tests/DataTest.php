@@ -12,7 +12,7 @@ class DataTest extends Testcase
     /**
      * @return void
      */
-    public function test_adds_and_gets_cells()
+    public function test_adding_cells()
     {
         // Arrange
         $data = new Data;
@@ -26,9 +26,9 @@ class DataTest extends Testcase
 
         $data->addCell($cell2);
 
+        // Assert
         $actual = $data->getCells();
 
-        // Assert
         $this->assertEquals($cell1, $actual[0]);
 
         $this->assertEquals($cell2, $actual[1]);
@@ -37,7 +37,109 @@ class DataTest extends Testcase
     /**
      * @return void
      */
-    public function test_gets_last_cell_and_index()
+    public function test_badge_in_cell()
+    {
+        // Arrange
+        $data = new Data;
+
+        $cell = new Cell('Status');
+
+        $badge = new Badge('Active', 'bg-success');
+
+        $expect = '<td><span class="badge rounded-pill text-uppercase bg-success">Active</span></td>';
+
+        // Act
+        $cell->addBadge($badge);
+
+        $data->addCell($cell);
+
+        // Assert
+        $actual = $data->cellsToHtml();
+
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_cells_as_td()
+    {
+        // Arrange
+        $data = new Data;
+
+        $cell1 = new Cell('Name', 'left', 'header-class');
+
+        $cell2 = new Cell('Age', 'right');
+
+        $expect = '<td align="left" class="header-class">Name</td><td align="right">Age</td>';
+
+        // Act
+        $data->addCell($cell1);
+
+        $data->addCell($cell2);
+
+        // Assert
+        $actual = $data->cellsToHtml();
+
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_cells_as_th()
+    {
+        // Arrange
+        $data = new Data;
+
+        $cell1 = new Cell('Header 1');
+
+        $cell2 = new Cell('Header 2');
+
+        $expect = '<th>Header 1</th><th>Header 2</th>';
+
+        // Act
+        $data->addCell($cell1);
+
+        $data->addCell($cell2);
+
+        // Assert
+        $actual = $data->cellsToHtml('th');
+
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_cells_with_class_in_tr()
+    {
+        // Arrange
+        $data = new Data;
+
+        $cell1 = new Cell('Header 1');
+
+        $cell2 = new Cell('Header 2');
+
+        $expect = '<tr class="row-class"><td>Header 1</td><td>Header 2</td></tr>';
+
+        // Act
+        $data->addCell($cell1);
+
+        $data->addCell($cell2);
+
+        $data->setClass('row-class');
+
+        // Assert
+        $actual = $data->toHtml();
+
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_last_cell_index()
     {
         // Arrange
         $data = new Data;
@@ -68,108 +170,6 @@ class DataTest extends Testcase
     /**
      * @return void
      */
-    public function test_renders_badges_in_cell()
-    {
-        // Arrange
-        $data = new Data;
-
-        $cell = new Cell('Status');
-
-        $badge = new Badge('Active', 'item.status === \'active\'', 'bg-success');
-
-        $cell->addBadge($badge);
-
-        $data->addCell($cell);
-
-        $expect = '<td><template x-if="item.status === \'active\'"><span class="badge rounded-pill text-uppercase bg-success">Active</span></template></td>';
-
-        // Act
-        $actual = $data->cellsToHtml();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_renders_cells_to_td()
-    {
-        // Arrange
-        $data = new Data;
-
-        $cell1 = new Cell('Name', 'left', 'header-class');
-
-        $cell2 = new Cell('Age', 'right');
-
-        $data->addCell($cell1);
-
-        $data->addCell($cell2);
-
-        $expect = '<td align="left" class="header-class">Name</td><td align="right">Age</td>';
-
-        // Act
-        $actual = $data->cellsToHtml();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_renders_cells_with_custom_tag()
-    {
-        // Arrange
-        $data = new Data;
-
-        $cell1 = new Cell('Header 1');
-
-        $cell2 = new Cell('Header 2');
-
-        $data->addCell($cell1);
-
-        $data->addCell($cell2);
-
-        $expect = '<th>Header 1</th><th>Header 2</th>';
-
-        // Act
-        $actual = $data->cellsToHtml('th');
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_renders_full_row_to_tr()
-    {
-        // Arrange
-        $data = new Data;
-
-        $cell1 = new Cell('Header 1');
-
-        $cell2 = new Cell('Header 2');
-
-        $data->addCell($cell1);
-
-        $data->addCell($cell2);
-
-        $data->setClass('row-class');
-
-        $expect = '<tr class="row-class"><td>Header 1</td><td>Header 2</td></tr>';
-
-        // Act
-        $actual = $data->toHtml();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
     public function test_replaces_last_cell()
     {
         // Arrange
@@ -184,9 +184,9 @@ class DataTest extends Testcase
 
         $data->setLast($cell2);
 
+        // Assert
         $actual = $data->getCells();
 
-        // Assert
         $this->assertEquals($cell2, $actual[0]);
     }
 }

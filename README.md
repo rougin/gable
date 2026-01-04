@@ -484,7 +484,7 @@ echo $table;
 
 ## Badges
 
-Badges can be used to highlight certain information in a cell, such as a record's status.
+Badges can be used to highlight certain information in a cell, such as a record's status:
 
 ``` php
 // index.php
@@ -499,15 +499,9 @@ $table->withAlpine();
 
 $table->newColumn();
 $table->setCell('Status')
-  ->addBadge('Active', "item.status === 'active'", 'bg-success')
-  ->addBadge('Inactive', "item.status === 'inactive'", 'bg-danger');
+  ->addBadge('Active', 'bg-success', "item.status === 'active'")
+  ->addBadge('Inactive', 'bg-danger', "item.status === 'inactive'");
 $table->setCell('Name');
-
-$table->newRow();
-// Placeholder for the badge ---
-$table->setCell('');
-// -----------------------------
-$table->setCell('John Doe');
 
 echo $table;
 ```
@@ -516,22 +510,26 @@ echo $table;
 <table>
   <thead>
     <tr>
-      <th>Name</th>
       <th>Status</th>
+      <th>Name</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>John Doe</td>
-      <td>
-        <template x-if="item.status === 'active'">
-          <span class="badge rounded-pill text-uppercase bg-success">Active</span>
-        </template>
-        <template x-if="item.status === 'inactive'">
-          <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
-        </template>
-      </td>
-    </tr>
+    <template x-if="items && items.length > 0">
+      <template x-for="item in items">
+        <tr>
+          <td>
+            <template x-if="item.status === \'active\'">
+              <span class="badge rounded-pill text-uppercase bg-success">Active</span>
+            </template>
+            <template x-if="item.status === \'inactive\'">
+              <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
+            </template>
+          </td>
+          <td x-text="item.name"></td>
+        </tr>
+      </template>
+    </template>
   </tbody>
 </table>
 ```

@@ -20,8 +20,8 @@ class TableTest extends Testcase
         $table->newColumn();
 
         $table->setCell('Type', 'left')
-            ->addBadge('Customer', 'item.type === 0', 'text-bg-success')
-            ->addBadge('Supplier', 'item.type === 1', 'text-bg-primary')
+            ->addBadge('Customer', 'text-bg-success', 'item.type === 0')
+            ->addBadge('Supplier', 'text-bg-primary', 'item.type === 1')
             ->withWidth(5);
         $table->setCell('Client Name', 'left')
             ->addHtml('<p class="mb-0" x-text="item.name"></p>')
@@ -87,8 +87,8 @@ class TableTest extends Testcase
         $table->newColumn();
 
         $table->setCell('Status')
-            ->addBadge('Active', 'item.status === \'active\'', 'bg-success')
-            ->addBadge('Inactive', 'item.status === \'inactive\'', 'bg-danger');
+            ->addBadge('Active', 'bg-success', 'item.status === \'active\'')
+            ->addBadge('Inactive', 'bg-danger', 'item.status === \'inactive\'');
 
         $table->setCell('Name');
 
