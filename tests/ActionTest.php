@@ -12,83 +12,39 @@ class ActionTest extends Testcase
     /**
      * @return void
      */
-    public function test_danger_state_is_false_by_default()
+    public function test_as_danger()
     {
         // Arrange
         $action = new Action;
 
+        // Act
+        $action->asDanger();
+
+        // Assert
         $actual = $action->isDanger();
 
-        // Assert (initial state)
+        $this->assertTrue($actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_danger_is_false()
+    {
+        // Arrange
+        $action = new Action;
+
+        // Act
+        $actual = $action->isDanger();
+
+        // Assert
         $this->assertFalse($actual);
-
-        // Act
-        $action->asDanger();
-
-        $actual = $action->isDanger();
-
-        // Assert (after setting danger)
-        $this->assertTrue($actual);
     }
 
     /**
      * @return void
      */
-    public function test_marks_action_as_danger()
-    {
-        // Arrange
-        $action = new Action;
-
-        // Act
-        $action->asDanger();
-
-        $actual = $action->isDanger();
-
-        // Assert
-        $this->assertTrue($actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_on_click_accessor()
-    {
-        // Arrange
-        $expect = 'anotherFunction()';
-
-        $action = new Action;
-
-        // Act
-        $action->ifClicked($expect);
-
-        $actual = $action->onClick();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_retrieves_set_name()
-    {
-        // Arrange
-        $expect = 'Test Action';
-
-        $action = new Action;
-
-        $action->setName($expect);
-
-        // Act
-        $actual = $action->getName();
-
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_sets_and_retrieves_name()
+    public function test_getting_name()
     {
         // Arrange
         $expect = 'Another Action';
@@ -106,19 +62,37 @@ class ActionTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_correct_click_handler()
+    public function test_if_clicked()
     {
         // Arrange
-        $expect = 'testFunction()';
+        $expect = 'anotherFunction()';
 
         $action = new Action;
 
         // Act
         $action->ifClicked($expect);
 
+        // Assert
         $actual = $action->onClick();
 
-        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_setting_name()
+    {
+        // Arrange
+        $expect = 'Test Action';
+
+        $action = new Action;
+
+        $action->setName($expect);
+
+        // Act
+        $actual = $action->getName();
+
         $this->assertEquals($expect, $actual);
     }
 }
