@@ -493,6 +493,69 @@ use Rougin\Gable\Table;
 
 $table = new Table;
 
+$table->newColumn();
+
+// Set the entire cell for badges ----
+$table->setCell('Status')
+  ->addBadge('Active', 'bg-success')
+  ->addBadge('Inactive', 'bg-danger');
+// -----------------------------------
+
+$table->setCell('Name');
+$table->setCell('Age');
+
+$table->newRow();
+
+// Specify the name of the badge ---
+$table->useBadge('Active');
+// ---------------------------------
+
+$table->setCell('John Doe');
+$table->setCell('30');
+
+$table->newRow();
+$table->useBadge('Inactive');
+$table->setCell('Jane Doe');
+$table->setCell('28');
+
+echo $table;
+```
+
+``` html
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <span class="badge rounded-pill text-uppercase bg-success">Active</span>
+      </td>
+      <td>John Doe</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
+      <td>Jane Doe</td>
+      <td>28</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+If `withAlpine` is defined, add a state in each badge in the third argument:
+
+``` php
+// index.php
+
+use Rougin\Gable\Table;
+
+$table = new Table;
+
 // Requires "alpinejs" to be enabled ---
 $table->withAlpine();
 // -------------------------------------
@@ -502,6 +565,7 @@ $table->setCell('Status')
   ->addBadge('Active', 'bg-success', "item.status === 'active'")
   ->addBadge('Inactive', 'bg-danger', "item.status === 'inactive'");
 $table->setCell('Name');
+$table->setCell('Age');
 
 echo $table;
 ```
@@ -512,6 +576,7 @@ echo $table;
     <tr>
       <th>Status</th>
       <th>Name</th>
+      <th>Age</th>
     </tr>
   </thead>
   <tbody>
@@ -527,6 +592,7 @@ echo $table;
             </template>
           </td>
           <td x-text="item.name"></td>
+          <td x-text="item.age"></td>
         </tr>
       </template>
     </template>
