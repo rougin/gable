@@ -61,9 +61,7 @@ $table->setCell('Jane Doe');
 $table->setCell('28');
 // --------------------------------
 
-// Use the "__toString" method ---
-echo $table;
-// -------------------------------
+echo $table->__toString();
 ```
 
 The code above will generate the following HTML output:
