@@ -60,4 +60,20 @@ class Badge
 
         return $this->state ? $item . '</template>' : $item;
     }
+
+    /**
+     * @return string
+     */
+    public function getHtml()
+    {
+        return $this->__toString();
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
 }

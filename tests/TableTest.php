@@ -108,6 +108,42 @@ class TableTest extends Testcase
     /**
      * @return void
      */
+    public function test_badges_in_row()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn();
+
+        $table->setCell('Status')
+            ->addBadge('Active', 'bg-success')
+            ->addBadge('Inactive', 'bg-danger');
+
+        $table->setCell('Name');
+        $table->setCell('Age');
+
+        $table->newRow();
+        $table->useBadge('Active');
+        $table->setCell('John Doe');
+        $table->setCell('30');
+
+        $table->newRow();
+        $table->useBadge('Inactive');
+        $table->setCell('Jane Doe');
+        $table->setCell('28');
+
+        $expect = '<table><thead><tr><th>Status</th><th>Name</th><th>Age</th></tr></thead><tbody><tr><td><span class="badge rounded-pill text-uppercase bg-success">Active</span></td><td>John Doe</td><td>30</td></tr><tr><td><span class="badge rounded-pill text-uppercase bg-danger">Inactive</span></td><td>Jane Doe</td><td>28</td></tr></tbody></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
     public function test_basic_table()
     {
         // Arrange
@@ -193,6 +229,53 @@ class TableTest extends Testcase
 
         // Assert
         $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_no_badges()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn();
+        $table->setCell('Status');
+        $table->setCell('Name');
+        $table->setCell('Age');
+
+        $table->newRow();
+        $table->useBadge('Active');
+        $table->setCell('John Doe');
+        $table->setCell('30');
+    }
+
+    /**
+     * @return void
+     */
+    public function test_invalid_badge()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn();
+
+        $table->setCell('Status')
+            ->addBadge('Inactive', 'bg-danger');
+
+        $table->setCell('Name');
+        $table->setCell('Age');
+
+        $table->newRow();
+        $table->useBadge('Active');
+        $table->setCell('John Doe');
+        $table->setCell('30');
     }
 
     /**
@@ -399,6 +482,42 @@ class TableTest extends Testcase
     /**
      * @return void
      */
+    public function test_with_empty_text_without_loading()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->withAlpine();
+
+        $text = 'No items found.';
+
+        $table->withEmptyText($text);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_with_error_text_without_loading()
+    {
+        // Assert
+        $this->doExpectException('Exception');
+
+        // Arrange
+        $table = new Table;
+
+        $table->withAlpine();
+
+        $text = 'An error occured in getting the items.';
+
+        $table->withErrorText($text);
+    }
+
+    /**
+     * @return void
+     */
     public function test_with_opacity()
     {
         // Arrange
@@ -449,41 +568,5 @@ class TableTest extends Testcase
         $table = new Table;
 
         $table->withLoading()->withOpacity(50);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_with_empty_text_without_loading()
-    {
-        // Assert
-        $this->doExpectException('Exception');
-
-        // Arrange
-        $table = new Table;
-
-        $table->withAlpine();
-
-        $text = 'No items found.';
-
-        $table->withEmptyText($text);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_with_error_text_without_loading()
-    {
-        // Assert
-        $this->doExpectException('Exception');
-
-        // Arrange
-        $table = new Table;
-
-        $table->withAlpine();
-
-        $text = 'An error occured in getting the items.';
-
-        $table->withErrorText($text);
     }
 }

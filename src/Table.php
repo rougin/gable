@@ -354,6 +354,48 @@ class Table extends Element
     }
 
     /**
+     * @param string $text
+     *
+     * @return self
+     */
+    public function useBadge($text)
+    {
+        // Get badges on the specified column -------
+        $index = count($this->rows) - 1;
+
+        $last = $this->rows[$index]->getLastIndex();
+
+        if (! array_key_exists($last, $this->badges))
+        {
+            throw new \Exception('No badges added');
+        }
+
+        $items = $this->badges[$last];
+        // ------------------------------------------
+
+        // Get the specified badge based on text ------
+        $badge = null;
+
+        foreach ($items as $item)
+        {
+            if ($item->getText() === $text)
+            {
+                $badge = $item;
+            }
+        }
+
+        if (! $badge)
+        {
+            $error = 'Badge "' . $text . '" not found';
+
+            throw new \Exception($error);
+        }
+        // --------------------------------------------
+
+        return $this->setCell($badge->getHtml());
+    }
+
+    /**
      * Adds a column for action buttons.
      *
      * @param mixed|null   $value

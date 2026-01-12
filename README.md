@@ -493,11 +493,11 @@ $table = new Table;
 
 $table->newColumn();
 
-// Set the entire cell for badges ----
+// Set the entire cell for badges ------
 $table->setCell('Status')
-  ->addBadge('Active', 'bg-success')
-  ->addBadge('Inactive', 'bg-danger');
-// -----------------------------------
+    ->addBadge('Active', 'bg-success')
+    ->addBadge('Inactive', 'bg-danger');
+// -------------------------------------
 
 $table->setCell('Name');
 $table->setCell('Age');

@@ -65,7 +65,7 @@ class Data extends Element
      */
     public function getLast()
     {
-        return $this->cells[count($this->cells) - 1];
+        return $this->cells[$this->getLastIndex()];
     }
 
     /**
@@ -73,7 +73,9 @@ class Data extends Element
      */
     public function getLastIndex()
     {
-        return count($this->cells) - 1;
+        $total = count($this->cells);
+
+        return $total === 0 ? 0 : $total - 1;
     }
 
     /**
@@ -83,9 +85,7 @@ class Data extends Element
      */
     public function setLast(Cell $cell)
     {
-        $last = count($this->cells) - 1;
-
-        $this->cells[$last] = $cell;
+        $this->cells[$this->getLastIndex()] = $cell;
 
         return $this;
     }
