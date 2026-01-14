@@ -537,7 +537,9 @@ echo $table;
       <td>30</td>
     </tr>
     <tr>
-      <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
+      <td>
+        <span class="badge rounded-pill text-uppercase bg-danger">Inactive</span>
+      </td>
       <td>Jane Doe</td>
       <td>28</td>
     </tr>
