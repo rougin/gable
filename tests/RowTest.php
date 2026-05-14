@@ -12,32 +12,7 @@ class RowTest extends Testcase
     /**
      * @return void
      */
-    public function test_initializes_with_all_props()
-    {
-        // Arrange
-        $class = 'test-class';
-
-        $style = 'color: blue;';
-
-        $width = 100;
-
-        // Act
-        $row = new Row($class, $style, $width);
-
-        $actual = $row->getAttrs();
-
-        // Assert
-        $this->assertEquals($class, $actual['class']);
-
-        $this->assertEquals($style, $actual['style']);
-
-        $this->assertEquals($width, $actual['width']);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_renders_cells_with_custom_tag()
+    public function test_passed_if_cells_render_with_custom_tag()
     {
         // Arrange
         $row = new Row;
@@ -62,7 +37,32 @@ class RowTest extends Testcase
     /**
      * @return void
      */
-    public function test_renders_row_with_cells()
+    public function test_passed_if_row_init_with_all_props()
+    {
+        // Arrange
+        $class = 'test-class';
+
+        $style = 'color: blue;';
+
+        $width = 100;
+
+        // Act
+        $row = new Row($class, $style, $width);
+
+        $actual = $row->getAttrs();
+
+        // Assert
+        $this->assertEquals($class, $actual['class']);
+
+        $this->assertEquals($style, $actual['style']);
+
+        $this->assertEquals($width, $actual['width']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_row_renders_with_cells()
     {
         // Arrange
         $row = new Row('row-class');

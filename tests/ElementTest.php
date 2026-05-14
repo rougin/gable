@@ -12,7 +12,7 @@ class ElementTest extends Testcase
     /**
      * @return void
      */
-    public function test_parses_all_set_attrs()
+    public function test_passed_if_all_attrs_are_parsed()
     {
         // Arrange
         $el = new Element;
@@ -35,26 +35,7 @@ class ElementTest extends Testcase
     /**
      * @return void
      */
-    public function test_returns_empty_for_null_attrs()
-    {
-        // Arrange
-        $el = new Element;
-
-        $el->withAttr('id', null);
-
-        $expect = '';
-
-        // Act
-        $actual = $el->getParsedAttrs();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_sets_and_gets_class_attr()
+    public function test_passed_if_class_attr_is_set()
     {
         // Arrange
         $el = new Element;
@@ -75,7 +56,7 @@ class ElementTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_custom_attrs()
+    public function test_passed_if_custom_attrs_are_set()
     {
         // Arrange
         $el = new Element;
@@ -98,7 +79,26 @@ class ElementTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_style_attr()
+    public function test_passed_if_null_attrs_returns_empty()
+    {
+        // Arrange
+        $el = new Element;
+
+        $el->withAttr('id', null);
+
+        $expect = '';
+
+        // Act
+        $actual = $el->getParsedAttrs();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_style_attr_is_set()
     {
         // Arrange
         $el = new Element;
@@ -119,7 +119,7 @@ class ElementTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_width_attr()
+    public function test_passed_if_width_attr_is_set()
     {
         // Arrange
         $el = new Element;

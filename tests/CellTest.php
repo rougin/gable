@@ -12,7 +12,7 @@ class CellTest extends Testcase
     /**
      * @return void
      */
-    public function test_all_props()
+    public function test_passed_if_all_cell_props_are_set()
     {
         // Arrange
         $value = 'Test Value';
@@ -59,7 +59,7 @@ class CellTest extends Testcase
     /**
      * @return void
      */
-    public function test_badges()
+    public function test_passed_if_badges_are_added_to_cell()
     {
         // Arrange
         $cell = new Cell;
@@ -84,7 +84,7 @@ class CellTest extends Testcase
     /**
      * @return void
      */
-    public function test_badges_as_array()
+    public function test_passed_if_badges_are_set_via_array()
     {
         // Arrange
         $cell = new Cell;
@@ -109,7 +109,70 @@ class CellTest extends Testcase
     /**
      * @return void
      */
-    public function test_empty_attrs()
+    public function test_passed_if_cell_name_is_set()
+    {
+        // Arrange
+        $cell = new Cell;
+
+        $expect = 'custom_name';
+
+        // Act
+        $cell->setName($expect);
+
+        $actual = $cell->getName();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_cell_value_is_set()
+    {
+        // Arrange
+        $cell = new Cell;
+
+        $expect = 'New Value';
+
+        // Act
+        $cell->setValue($expect);
+
+        $actual = $cell->getValue();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_custom_attrs_are_parsed()
+    {
+        // Arrange
+        $cell = new Cell;
+
+        $expect = 'id="my-cell" class="custom-class" style="font-size: 12px;" width="75%"';
+
+        // Act
+        $cell->withAttr('id', 'my-cell');
+
+        $cell->setClass('custom-class');
+
+        $cell->setStyle('font-size: 12px;');
+
+        $cell->setWidth(75);
+
+        // Assert
+        $actual = $cell->getParsedAttrs();
+
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_empty_cell_has_no_attrs()
     {
         // Arrange
         $cell = new Cell;
@@ -124,7 +187,7 @@ class CellTest extends Testcase
     /**
      * @return void
      */
-    public function test_name_as_snake_case()
+    public function test_passed_if_name_is_converted_to_snake()
     {
         // Test case 1: "First Name" ---------
         // Arrange
@@ -177,68 +240,5 @@ class CellTest extends Testcase
         // Assert
         $this->assertEquals($expect, $actual);
         // -----------------------------------
-    }
-
-    /**
-     * @return void
-     */
-    public function test_setting_name()
-    {
-        // Arrange
-        $cell = new Cell;
-
-        $expect = 'custom_name';
-
-        // Act
-        $cell->setName($expect);
-
-        $actual = $cell->getName();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_setting_value()
-    {
-        // Arrange
-        $cell = new Cell;
-
-        $expect = 'New Value';
-
-        // Act
-        $cell->setValue($expect);
-
-        $actual = $cell->getValue();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_with_attrs()
-    {
-        // Arrange
-        $cell = new Cell;
-
-        $expect = 'id="my-cell" class="custom-class" style="font-size: 12px;" width="75%"';
-
-        // Act
-        $cell->withAttr('id', 'my-cell');
-
-        $cell->setClass('custom-class');
-
-        $cell->setStyle('font-size: 12px;');
-
-        $cell->setWidth(75);
-
-        // Assert
-        $actual = $cell->getParsedAttrs();
-
-        $this->assertEquals($expect, $actual);
     }
 }

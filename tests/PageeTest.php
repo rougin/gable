@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -12,36 +14,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_initializes_with_all_props()
-    {
-        // Arrange
-        $page = 2;
-
-        $limit = 20;
-
-        $link = '/users';
-
-        // Act
-        $pagee = new Pagee($page, $limit, $link);
-
-        // Assert
-        $actual = $pagee->getPage();
-
-        $this->assertEquals($page, $actual);
-
-        $actual = $pagee->getLimit();
-
-        $this->assertEquals($limit, $actual);
-
-        $actual = $pagee->getLink();
-
-        $this->assertEquals($link, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_renders_alpine_pagination()
+    public function test_passed_if_alpine_pagination_renders()
     {
         // Arrange
         $pagee = new Pagee;
@@ -68,32 +41,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_renders_standard_pagination()
-    {
-        // Arrange
-        $pagee = new Pagee;
-
-        $pagee->setTotal(100);
-
-        $pagee->setLimit(10);
-
-        $pagee->setPage(2);
-
-        $pagee->setLink('/users');
-
-        $expect = '<div class="d-inline-block"><ul class="pagination"><li class="page-item"><a class="page-link" href="/users?p=1&l=10"><span>First</span></a></li><li class="page-item"><a class="page-link" href="/users?p=1&l=10"><span>Previous</span></a></li><li class="page-item"><a class="page-link" href="/users?p=1&l=10"><span>1</span></a></li><li class="page-item active"><a class="page-link" href="javascript:void(0)"><span>2</span></a></li><li class="page-item"><a class="page-link" href="/users?p=3&l=10"><span>3</span></a></li><li class="page-item"><a class="page-link" href="/users?p=4&l=10"><span>4</span></a></li><li class="page-item"><a class="page-link" href="/users?p=5&l=10"><span>5</span></a></li><li class="page-item"><a class="page-link" href="/users?p=6&l=10"><span>6</span></a></li><li class="page-item"><a class="page-link" href="/users?p=7&l=10"><span>7</span></a></li><li class="page-item"><a class="page-link" href="/users?p=8&l=10"><span>8</span></a></li><li class="page-item"><a class="page-link" href="/users?p=9&l=10"><span>9</span></a></li><li class="page-item"><a class="page-link" href="/users?p=10&l=10"><span>10</span></a></li><li class="page-item"><a class="page-link" href="/users?p=3&l=10"><span>Next</span></a></li><li class="page-item"><a class="page-link" href="/users?p=10&l=10"><span>Last</span></a></li></ul></div>';
-
-        // Act
-        $actual = $pagee->__toString();
-
-        // Assert
-        $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_renders_to_javascript_object()
+    public function test_passed_if_js_object_is_rendered()
     {
         // Arrange
         $pagee = new Pagee;
@@ -122,7 +70,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_limit()
+    public function test_passed_if_limit_is_set_correctly()
     {
         // Arrange
         $pagee = new Pagee;
@@ -141,7 +89,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_limit_key()
+    public function test_passed_if_limit_key_is_set()
     {
         // Arrange
         $pagee = new Pagee;
@@ -160,7 +108,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_link()
+    public function test_passed_if_link_is_set()
     {
         // Arrange
         $pagee = new Pagee;
@@ -179,7 +127,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_page()
+    public function test_passed_if_page_is_set()
     {
         // Arrange
         $pagee = new Pagee;
@@ -198,7 +146,7 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_page_key()
+    public function test_passed_if_page_key_is_set()
     {
         // Arrange
         $pagee = new Pagee;
@@ -217,7 +165,97 @@ class PageeTest extends Testcase
     /**
      * @return void
      */
-    public function test_sets_and_gets_total()
+    public function test_passed_if_pagee_initializes_with_props()
+    {
+        // Arrange
+        $page = 2;
+
+        $limit = 20;
+
+        $link = '/users';
+
+        // Act
+        $pagee = new Pagee($page, $limit, $link);
+
+        // Assert
+        $actual = $pagee->getPage();
+
+        $this->assertEquals($page, $actual);
+
+        $actual = $pagee->getLimit();
+
+        $this->assertEquals($limit, $actual);
+
+        $actual = $pagee->getLink();
+
+        $this->assertEquals($link, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_standard_pagination_renders()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $pagee->setTotal(100);
+
+        $pagee->setLimit(10);
+
+        $pagee->setPage(2);
+
+        $pagee->setLink('/users');
+
+        $expect = '<div class="d-inline-block"><ul class="pagination"><li class="page-item"><a class="page-link" href="/users?p=1&l=10"><span>First</span></a></li><li class="page-item"><a class="page-link" href="/users?p=1&l=10"><span>Previous</span></a></li><li class="page-item"><a class="page-link" href="/users?p=1&l=10"><span>1</span></a></li><li class="page-item active"><a class="page-link" href="javascript:void(0)"><span>2</span></a></li><li class="page-item"><a class="page-link" href="/users?p=3&l=10"><span>3</span></a></li><li class="page-item"><a class="page-link" href="/users?p=4&l=10"><span>4</span></a></li><li class="page-item"><a class="page-link" href="/users?p=5&l=10"><span>5</span></a></li><li class="page-item"><a class="page-link" href="/users?p=6&l=10"><span>6</span></a></li><li class="page-item"><a class="page-link" href="/users?p=7&l=10"><span>7</span></a></li><li class="page-item"><a class="page-link" href="/users?p=8&l=10"><span>8</span></a></li><li class="page-item"><a class="page-link" href="/users?p=9&l=10"><span>9</span></a></li><li class="page-item"><a class="page-link" href="/users?p=10&l=10"><span>10</span></a></li><li class="page-item"><a class="page-link" href="/users?p=3&l=10"><span>Next</span></a></li><li class="page-item"><a class="page-link" href="/users?p=10&l=10"><span>Last</span></a></li></ul></div>';
+
+        // Act
+        $actual = $pagee->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_style_defaults_to_bootstrap()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $expect = 'Rougin\Gable\Styles\BootstrapStyle';
+
+        // Act
+        $actual = $pagee->getStyle();
+
+        // Assert
+        $this->assertInstanceOf($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_style_can_be_set_and_retrieved()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $style = new BootstrapStyle;
+
+        // Act
+        $pagee->withStyle($style);
+
+        $actual = $pagee->getStyle();
+
+        // Assert
+        $this->assertSame($style, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_total_is_set()
     {
         // Arrange
         $pagee = new Pagee;

@@ -12,7 +12,7 @@ class BadgeTest extends Testcase
     /**
      * @return void
      */
-    public function test_with_state()
+    public function test_passed_if_badge_renders_with_state()
     {
         // Arrange
         $badge = new Badge('Active', 'bg-success', 'item.status === \'active\'');

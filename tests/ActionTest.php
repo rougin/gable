@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -12,7 +14,7 @@ class ActionTest extends Testcase
     /**
      * @return void
      */
-    public function test_as_danger()
+    public function test_passed_if_action_is_marked_as_danger()
     {
         // Arrange
         $action = new Action;
@@ -29,22 +31,7 @@ class ActionTest extends Testcase
     /**
      * @return void
      */
-    public function test_danger_is_false()
-    {
-        // Arrange
-        $action = new Action;
-
-        // Act
-        $actual = $action->isDanger();
-
-        // Assert
-        $this->assertFalse($actual);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_getting_name()
+    public function test_passed_if_action_name_is_retrieved()
     {
         // Arrange
         $expect = 'Another Action';
@@ -62,7 +49,25 @@ class ActionTest extends Testcase
     /**
      * @return void
      */
-    public function test_if_clicked()
+    public function test_passed_if_action_name_is_set()
+    {
+        // Arrange
+        $expect = 'Test Action';
+
+        $action = new Action;
+
+        $action->setName($expect);
+
+        // Act
+        $actual = $action->getName();
+
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_click_event_is_set()
     {
         // Arrange
         $expect = 'anotherFunction()';
@@ -81,18 +86,51 @@ class ActionTest extends Testcase
     /**
      * @return void
      */
-    public function test_setting_name()
+    public function test_passed_if_danger_defaults_to_false()
     {
         // Arrange
-        $expect = 'Test Action';
-
         $action = new Action;
 
-        $action->setName($expect);
+        // Act
+        $actual = $action->isDanger();
+
+        // Assert
+        $this->assertFalse($actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_style_defaults_to_bootstrap()
+    {
+        // Arrange
+        $action = new Action;
+
+        $expect = 'Rougin\Gable\Styles\BootstrapStyle';
 
         // Act
-        $actual = $action->getName();
+        $actual = $action->getStyle();
 
-        $this->assertEquals($expect, $actual);
+        // Assert
+        $this->assertInstanceOf($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_style_can_be_set_and_retrieved()
+    {
+        // Arrange
+        $action = new Action;
+
+        $style = new BootstrapStyle;
+
+        // Act
+        $action->withStyle($style);
+
+        $actual = $action->getStyle();
+
+        // Assert
+        $this->assertSame($style, $actual);
     }
 }
