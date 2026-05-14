@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -18,6 +20,11 @@ class Badge
      * @var string|null
      */
     protected $state = null;
+
+    /**
+     * @var \Rougin\Gable\StyleInterface|null
+     */
+    protected $style = null;
 
     /**
      * @var string
@@ -50,9 +57,7 @@ class Badge
             $item = '<template x-if="' . $this->state . '">';
         }
 
-        // TODO: Replace with "StyleInterface" ----------------------
-        $class = 'badge rounded-pill text-uppercase ' . $this->class;
-        // ----------------------------------------------------------
+        $class = $this->getStyle()->badge() . ' ' . $this->class;
 
         $item .= '<span class="' . $class . '">';
 
@@ -70,10 +75,35 @@ class Badge
     }
 
     /**
+     * @return \Rougin\Gable\StyleInterface
+     */
+    public function getStyle()
+    {
+        if ($this->style instanceof StyleInterface)
+        {
+            return $this->style;
+        }
+
+        return new BootstrapStyle;
+    }
+
+    /**
      * @return string
      */
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * @param \Rougin\Gable\StyleInterface $style
+     *
+     * @return self
+     */
+    public function withStyle(StyleInterface $style)
+    {
+        $this->style = $style;
+
+        return $this;
     }
 }

@@ -46,6 +46,11 @@ class Data extends Element
                 $value = implode('', $badges);
             }
 
+            if (! is_string($value) && ! is_numeric($value))
+            {
+                $value = '';
+            }
+
             $html .= '<' . $type . ' ' . $cell->getParsedAttrs() . '>' . $value . '</' . $type . '>';
         }
 

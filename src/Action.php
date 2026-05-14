@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -35,6 +37,24 @@ class Action
     protected $name = null;
 
     /**
+     * @var \Rougin\Gable\StyleInterface|null
+     */
+    protected $style = null;
+
+    /**
+     * @return \Rougin\Gable\StyleInterface
+     */
+    public function getStyle()
+    {
+        if ($this->style instanceof StyleInterface)
+        {
+            return $this->style;
+        }
+
+        return new BootstrapStyle;
+    }
+
+    /**
      * @param \Rougin\Gable\Cell     $cell
      * @param \Rougin\Gable\Action[] $items
      *
@@ -42,13 +62,16 @@ class Action
      */
     public static function setMenu(Cell $cell, $items)
     {
-        // TODO: Replace with "StyleInterface" --------------------------------------------------------------------
-        $html = '<div class="dropdown">';
-        $html .= '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">';
-        $html .= $cell->getValue() ? $cell->getValue() : 'Action' . (count($items) > 1 ? 's' : '');
+        $style = count($items) > 0 ? $items[0]->getStyle() : new BootstrapStyle;
+
+        $html = '<div class="' . $style->dropdown() . '">';
+        $html .= '<button class="' . $style->dropdownButton() . '" type="button" data-bs-toggle="dropdown">';
+
+        $value = $cell->getValue();
+
+        $html .= is_string($value) ? $value : 'Action' . (count($items) > 1 ? 's' : '');
         $html .= '</button>';
-        $html .= '<div class="dropdown-menu dropdown-menu-end">';
-        // --------------------------------------------------------------------------------------------------------
+        $html .= '<div class="' . $style->dropdownMenu() . '">';
 
         $hasDanger = false;
 
@@ -63,6 +86,18 @@ class Action
         }
 
         return $html . '</div></div>';
+    }
+
+    /**
+     * @param \Rougin\Gable\StyleInterface $style
+     *
+     * @return self
+     */
+    public function withStyle(StyleInterface $style)
+    {
+        $this->style = $style;
+
+        return $this;
     }
 
     /**
@@ -82,15 +117,15 @@ class Action
      */
     public function getHtml($danger = false)
     {
-        // TODO: Replace with "StyleInterface" -----------
-        $hrClass = 'dropdown-divider';
+        $style = $this->getStyle();
 
-        $itemClass = 'dropdown-item';
+        $hrClass = $style->dropdownDivider();
 
-        $danger = $this->isDanger() ? ' text-danger' : '';
+        $itemClass = $style->dropdownItem();
+
+        $danger = $this->isDanger() ? ' ' . $style->dropdownDanger() : '';
 
         $itemClass = $itemClass . $danger;
-        // -----------------------------------------------
 
         $html = '';
 

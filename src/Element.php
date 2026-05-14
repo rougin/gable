@@ -10,12 +10,12 @@ namespace Rougin\Gable;
 class Element
 {
     /**
-     * @var array<string, mixed>
+     * @var array<string, integer|string|null>
      */
     protected $attrs = array();
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, integer|string|null>
      */
     public function getAttrs()
     {
@@ -78,8 +78,8 @@ class Element
     }
 
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param string              $key
+     * @param integer|string|null $value
      *
      * @return self
      */

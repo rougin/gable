@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -45,6 +47,11 @@ class Loading
     protected $name;
 
     /**
+     * @var \Rougin\Gable\StyleInterface|null
+     */
+    protected $style = null;
+
+    /**
      * @param integer $count
      * @param string  $name
      */
@@ -62,14 +69,16 @@ class Loading
      */
     public function getHtml($html)
     {
+        $style = $this->getStyle();
+
         $html .= '<template x-if="items.length === 0 && ' . $this->name . '">';
         $html .= '<template x-data="{ length: items && items.length ? items.length : ' . $this->count . ' }" x-for="i in length">';
         $html .= '<tr>';
 
         foreach (range(1, $this->cells) as $item)
         {
-            $html .= '<td class="align-middle placeholder-glow">';
-            $html .= '<span class="placeholder col-12"></span>';
+            $html .= '<td class="' . $style->loadingCell() . '">';
+            $html .= '<span class="' . $style->loadingSpan() . '"></span>';
             $html .= '</td>';
         }
 
@@ -80,7 +89,7 @@ class Loading
         // Show "no items found" text if loading is enabled -------------------------
         $html .= '<template x-if="items.length === 0 && ' . $this->empty['name'] . '">';
         $html .= '<tr>';
-        $html .= '<td colspan="' . $this->cells . '" class="align-middle text-center">';
+        $html .= '<td colspan="' . $this->cells . '" class="' . $style->emptyCell() . '">';
         $html .= '<span>' . $this->empty['text'] . '</span>';
         $html .= '</td>';
         $html .= '</tr>';
@@ -90,7 +99,7 @@ class Loading
         // Show "loading error" text if there is an error when loading --------------------------
         $html .= '<template x-if="! ' . $this->name . ' && ' . $this->error['name'] . '">';
         $html .= '<tr>';
-        $html .= '<td colspan="' . $this->cells . '" class="align-middle text-center">';
+        $html .= '<td colspan="' . $this->cells . '" class="' . $style->emptyCell() . '">';
         $html .= '<span>' . $this->error['text'] . '</span>';
         $html .= '</td>';
         $html .= '</tr>';
@@ -106,6 +115,19 @@ class Loading
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return \Rougin\Gable\StyleInterface
+     */
+    public function getStyle()
+    {
+        if ($this->style instanceof StyleInterface)
+        {
+            return $this->style;
+        }
+
+        return new BootstrapStyle;
     }
 
     /**
@@ -150,6 +172,18 @@ class Loading
         $data['text'] = $text;
 
         $this->error = $data;
+
+        return $this;
+    }
+
+    /**
+     * @param \Rougin\Gable\StyleInterface $style
+     *
+     * @return self
+     */
+    public function withStyle(StyleInterface $style)
+    {
+        $this->style = $style;
 
         return $this;
     }

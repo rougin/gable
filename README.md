@@ -771,6 +771,120 @@ public function withName($name)
 public function withWidth($width)
 ```
 
+## Restyling table
+
+The default styling uses Bootstrap 5 classes. To use a different CSS framework, implement the `StyleInterface` and pass it to the table or any of its components:
+
+``` php
+namespace Rougin\Test\Styles;
+
+use Rougin\Gable\Table;
+use Rougin\Gable\Pagee;
+use Rougin\Gable\StyleInterface;
+use Rougin\Gable\Styles\BootstrapStyle;
+
+class TailwindStyle implements StyleInterface
+{
+    public function badge()
+    {
+        return 'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset';
+    }
+
+    public function dropdown()
+    {
+        return 'relative inline-block text-left';
+    }
+
+    public function dropdownButton()
+    {
+        return 'inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50';
+    }
+
+    public function dropdownDanger()
+    {
+        return 'text-red-600';
+    }
+
+    public function dropdownDivider()
+    {
+        return 'divide-y divide-gray-100';
+    }
+
+    public function dropdownItem()
+    {
+        return 'block px-4 py-2 text-sm text-gray-700';
+    }
+
+    public function dropdownMenu()
+    {
+        return 'absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5';
+    }
+
+    public function emptyCell()
+    {
+        return 'px-3 py-4 text-center text-sm text-gray-500';
+    }
+
+    public function loadingCell()
+    {
+        return 'px-3 py-4 animate-pulse';
+    }
+
+    public function loadingSpan()
+    {
+        return 'block h-4 w-full rounded bg-gray-200';
+    }
+
+    public function paginationActive()
+    {
+        return 'bg-indigo-600 text-white';
+    }
+
+    public function paginationDisabled()
+    {
+        return 'text-gray-400 cursor-not-allowed';
+    }
+
+    public function paginationItem()
+    {
+        return 'relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50';
+    }
+
+    public function paginationLink()
+    {
+        return 'block';
+    }
+
+    public function paginationList()
+    {
+        return 'isolate inline-flex -space-x-px rounded-md shadow-sm';
+    }
+
+    public function paginationWrapper()
+    {
+        return 'flex items-center justify-center';
+    }
+}
+```
+
+``` php
+use Rougin\Gable\Pagee;
+use Rougin\Gable\Table;
+use Rougin\Test\Styles\TailwindStyle;
+
+$table = new Table;
+
+// Apply the custom style to a table ---
+$table->withStyle(new TailwindStyle);
+// -------------------------------------
+
+// Or apply to a specified element ---
+$pagee = new Pagee;
+
+$pagee->withStyle(new TailwindStyle);
+// -----------------------------------
+```
+
 ## Changelog
 
 Please see [CHANGELOG][link-changelog] for more recent changes.

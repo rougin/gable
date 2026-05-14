@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -49,6 +51,11 @@ class Pagee
     protected $total = 0;
 
     /**
+     * @var \Rougin\Gable\StyleInterface|null
+     */
+    protected $style = null;
+
+    /**
      * @param integer     $page
      * @param integer     $limit
      * @param string|null $link
@@ -67,8 +74,10 @@ class Pagee
      */
     public function __toString()
     {
-        $html = '<div class="d-inline-block">';
-        $html .= '<ul class="pagination">';
+        $style = $this->getStyle();
+
+        $html = '<div class="' . $style->paginationWrapper() . '">';
+        $html .= '<ul class="' . $style->paginationList() . '">';
 
         if (! $this->alpine)
         {
@@ -116,22 +125,22 @@ class Pagee
             return $html;
         }
 
-        $html .= '<li class="page-item" :class="{ \'disabled\': pagee.page === 1 }">';
-        $html .= '<a class="page-link" :href="pagee.url(1)" :page="1" @click.prevent="pagee.view($dispatch, $el)">First</a>';
+        $html .= '<li class="' . $style->paginationItem() . '" :class="{ \'' . $style->paginationDisabled() . '\': pagee.page === 1 }">';
+        $html .= '<a class="' . $style->paginationLink() . '" :href="pagee.url(1)" :page="1" @click.prevent="pagee.view($dispatch, $el)">First</a>';
         $html .= '</li>';
-        $html .= '<li class="page-item" :class="{ \'disabled\': pagee.page <= 1 }">';
-        $html .= '<a class="page-link" :href="pagee.url(pagee.page - 1)" :page="pagee.page - 1" @click.prevent="pagee.view($dispatch, $el)">Prev</a>';
+        $html .= '<li class="' . $style->paginationItem() . '" :class="{ \'' . $style->paginationDisabled() . '\': pagee.page <= 1 }">';
+        $html .= '<a class="' . $style->paginationLink() . '" :href="pagee.url(pagee.page - 1)" :page="pagee.page - 1" @click.prevent="pagee.view($dispatch, $el)">Prev</a>';
         $html .= '</li>';
         $html .= '<template x-for="(page, index) in pagee.items()" :key="index">';
-        $html .= '<li class="page-item" :class="{ \'active\': (index + 1) === pagee.page }">';
-        $html .= '<a class="page-link" :href="pagee.url(index + 1)" :page="index + 1" @click.prevent="pagee.view($dispatch, $el)" x-text="index + 1"></a>';
+        $html .= '<li class="' . $style->paginationItem() . '" :class="{ \'' . $style->paginationActive() . '\': (index + 1) === pagee.page }">';
+        $html .= '<a class="' . $style->paginationLink() . '" :href="pagee.url(index + 1)" :page="index + 1" @click.prevent="pagee.view($dispatch, $el)" x-text="index + 1"></a>';
         $html .= '</li>';
         $html .= '</template>';
-        $html .= '<li class="page-item" :class="{ \'disabled\': pagee.page >= pagee.pages }">';
-        $html .= '<a class="page-link" :href="pagee.url(pagee.page + 1)" :page="pagee.page + 1" @click.prevent="pagee.view($dispatch, $el)">Next</a>';
+        $html .= '<li class="' . $style->paginationItem() . '" :class="{ \'' . $style->paginationDisabled() . '\': pagee.page >= pagee.pages }">';
+        $html .= '<a class="' . $style->paginationLink() . '" :href="pagee.url(pagee.page + 1)" :page="pagee.page + 1" @click.prevent="pagee.view($dispatch, $el)">Next</a>';
         $html .= '</li>';
-        $html .= '<li class="page-item" :class="{ \'disabled\': pagee.page === pagee.pages }">';
-        $html .= '<a class="page-link" :href="pagee.url(pagee.pages)" :page="pagee.pages" @click.prevent="pagee.view($dispatch, $el)">Last</a>';
+        $html .= '<li class="' . $style->paginationItem() . '" :class="{ \'' . $style->paginationDisabled() . '\': pagee.page === pagee.pages }">';
+        $html .= '<a class="' . $style->paginationLink() . '" :href="pagee.url(pagee.pages)" :page="pagee.pages" @click.prevent="pagee.view($dispatch, $el)">Last</a>';
         $html .= '</li>';
 
         $html .= '</ul>';
@@ -188,6 +197,19 @@ class Pagee
     public function getPageKey()
     {
         return $this->pageKey;
+    }
+
+    /**
+     * @return \Rougin\Gable\StyleInterface
+     */
+    public function getStyle()
+    {
+        if ($this->style instanceof StyleInterface)
+        {
+            return $this->style;
+        }
+
+        return new BootstrapStyle;
     }
 
     /**
@@ -297,6 +319,18 @@ class Pagee
     }
 
     /**
+     * @param \Rougin\Gable\StyleInterface $style
+     *
+     * @return self
+     */
+    public function withStyle(StyleInterface $style)
+    {
+        $this->style = $style;
+
+        return $this;
+    }
+
+    /**
      * @param string  $name
      * @param string  $link
      * @param boolean $status
@@ -306,13 +340,15 @@ class Pagee
      */
     protected function setButton($name, $link, $status = false, $type = self::BTN_DISABLED)
     {
-        $active = $status ? ' active' : '';
-        $disabled = $status ? ' disabled' : '';
+        $style = $this->getStyle();
+
+        $active = $status ? ' ' . $style->paginationActive() : '';
+        $disabled = $status ? ' ' . $style->paginationDisabled() : '';
 
         $class = $type === self::BTN_DISABLED ? $disabled : $active;
 
-        $html = '<li class="page-item' . $class . '">';
-        $html .= '<a class="page-link" href="' . $link . '">';
+        $html = '<li class="' . $style->paginationItem() . $class . '">';
+        $html .= '<a class="' . $style->paginationLink() . '" href="' . $link . '">';
         $html .= '<span>' . $name . '</span>';
         $html .= '</a>';
         $html .= '</li>';

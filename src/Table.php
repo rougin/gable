@@ -2,6 +2,8 @@
 
 namespace Rougin\Gable;
 
+use Rougin\Gable\Styles\BootstrapStyle;
+
 /**
  * @package Gable
  *
@@ -61,6 +63,11 @@ class Table extends Element
     protected $type = null;
 
     /**
+     * @var \Rougin\Gable\StyleInterface|null
+     */
+    protected $style = null;
+
+    /**
      * @return string
      */
     public function __toString()
@@ -69,8 +76,6 @@ class Table extends Element
     }
 
     /**
-     * @param \Rougin\Gable\Action $action
-     *
      * @return self
      */
     public function addAction(Action $action)
@@ -99,6 +104,8 @@ class Table extends Element
         }
 
         $badge = new Badge($text, $class, $state);
+
+        $badge->withStyle($this->getStyle());
 
         $this->badges[$index][] = $badge;
 
@@ -149,6 +156,19 @@ class Table extends Element
         $this->htmls[$index][] = $html;
 
         return $this;
+    }
+
+    /**
+     * @return \Rougin\Gable\StyleInterface
+     */
+    public function getStyle()
+    {
+        if ($this->style instanceof StyleInterface)
+        {
+            return $this->style;
+        }
+
+        return new BootstrapStyle;
     }
 
     /**
@@ -451,6 +471,8 @@ class Table extends Element
 
         $item->setName($name);
 
+        $item->withStyle($this->getStyle());
+
         if ($this->alpine)
         {
             $item->withAlpine();
@@ -521,6 +543,8 @@ class Table extends Element
     {
         $this->loading = new Loading($count, $name);
 
+        $this->loading->withStyle($this->getStyle());
+
         return $this;
     }
 
@@ -571,6 +595,18 @@ class Table extends Element
     }
 
     /**
+     * @param \Rougin\Gable\StyleInterface $style
+     *
+     * @return self
+     */
+    public function withStyle(StyleInterface $style)
+    {
+        $this->style = $style;
+
+        return $this;
+    }
+
+    /**
      * Adds an "Update" action button.
      *
      * @param string $action
@@ -583,6 +619,8 @@ class Table extends Element
         $item = new Action;
 
         $item->setName($name);
+
+        $item->withStyle($this->getStyle());
 
         if ($this->alpine)
         {
