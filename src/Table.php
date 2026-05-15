@@ -105,7 +105,7 @@ class Table extends Element
 
         $badge = new Badge($text, $class, $state);
 
-        $badge->withStyle($this->getStyle());
+        $badge->useStyle($this->getStyle());
 
         $this->badges[$index][] = $badge;
 
@@ -416,6 +416,18 @@ class Table extends Element
     }
 
     /**
+     * @param \Rougin\Gable\StyleInterface $style
+     *
+     * @return self
+     */
+    public function useStyle(StyleInterface $style)
+    {
+        $this->style = $style;
+
+        return $this;
+    }
+
+    /**
      * Adds a column for action buttons.
      *
      * @param mixed|null   $value
@@ -444,6 +456,18 @@ class Table extends Element
     }
 
     /**
+     * Sets the alignment of the last cell.
+     *
+     * @param string $align
+     *
+     * @return self
+     */
+    public function withAlign($align)
+    {
+        return $this->setCellAttr('align', $align);
+    }
+
+    /**
      * Enables usage of "alpine.js" to the table.
      *
      * @param string $name
@@ -455,6 +479,30 @@ class Table extends Element
         $this->alpine = new Alpine($name);
 
         return $this;
+    }
+
+    /**
+     * Sets the CSS class of the last cell.
+     *
+     * @param string $class
+     *
+     * @return self
+     */
+    public function withClass($class)
+    {
+        return $this->setCellAttr('class', $class);
+    }
+
+    /**
+     * Sets the colspan of the last cell.
+     *
+     * @param integer $cspan
+     *
+     * @return self
+     */
+    public function withCspan($cspan)
+    {
+        return $this->setCellAttr('cspan', $cspan);
     }
 
     /**
@@ -471,7 +519,7 @@ class Table extends Element
 
         $item->setName($name);
 
-        $item->withStyle($this->getStyle());
+        $item->useStyle($this->getStyle());
 
         if ($this->alpine)
         {
@@ -543,7 +591,7 @@ class Table extends Element
     {
         $this->loading = new Loading($count, $name);
 
-        $this->loading->withStyle($this->getStyle());
+        $this->loading->useStyle($this->getStyle());
 
         return $this;
     }
@@ -595,15 +643,27 @@ class Table extends Element
     }
 
     /**
-     * @param \Rougin\Gable\StyleInterface $style
+     * Sets the rowspan of the last cell.
+     *
+     * @param integer $rspan
      *
      * @return self
      */
-    public function withStyle(StyleInterface $style)
+    public function withRspan($rspan)
     {
-        $this->style = $style;
+        return $this->setCellAttr('rspan', $rspan);
+    }
 
-        return $this;
+    /**
+     * Sets the inline CSS style of the last cell.
+     *
+     * @param string $style
+     *
+     * @return self
+     */
+    public function withStyle($style)
+    {
+        return $this->setCellAttr('style', $style);
     }
 
     /**
@@ -620,7 +680,7 @@ class Table extends Element
 
         $item->setName($name);
 
-        $item->withStyle($this->getStyle());
+        $item->useStyle($this->getStyle());
 
         if ($this->alpine)
         {
@@ -647,13 +707,24 @@ class Table extends Element
      */
     public function withWidth($width)
     {
+        return $this->setCellAttr('width', $width);
+    }
+
+    /**
+     * @param string              $key
+     * @param integer|string|null $value
+     *
+     * @return self
+     */
+    protected function setCellAttr($key, $value)
+    {
         if ($this->type === self::TYPE_COL)
         {
             $index = count($this->cols) - 1;
 
             $cell = $this->cols[$index]->getLast();
 
-            $cell->setWidth($width);
+            $cell->withAttr($key, $value);
 
             $this->cols[$index]->setLast($cell);
 
@@ -664,7 +735,7 @@ class Table extends Element
 
         $cell = $this->rows[$index]->getLast();
 
-        $cell->setWidth($width);
+        $cell->withAttr($key, $value);
 
         $this->rows[$index]->setLast($cell);
 

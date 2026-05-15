@@ -117,7 +117,7 @@ class LoadingTest extends Testcase
         $style = new BootstrapStyle;
 
         // Act
-        $loading->withStyle($style);
+        $loading->useStyle($style);
 
         $actual = $loading->getStyle();
 

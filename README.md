@@ -875,13 +875,13 @@ use Rougin\Test\Styles\TailwindStyle;
 $table = new Table;
 
 // Apply the custom style to a table ---
-$table->withStyle(new TailwindStyle);
+$table->useStyle(new TailwindStyle);
 // -------------------------------------
 
 // Or apply to a specified element ---
 $pagee = new Pagee;
 
-$pagee->withStyle(new TailwindStyle);
+$pagee->useStyle(new TailwindStyle);
 // -----------------------------------
 ```
 

@@ -126,7 +126,7 @@ class ActionTest extends Testcase
         $style = new BootstrapStyle;
 
         // Act
-        $action->withStyle($style);
+        $action->useStyle($style);
 
         $actual = $action->getStyle();
 

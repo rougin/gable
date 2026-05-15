@@ -577,7 +577,7 @@ class TableTest extends Testcase
         $style = new BootstrapStyle;
 
         // Act
-        $table->withStyle($style);
+        $table->useStyle($style);
 
         $actual = $table->getStyle();
 
@@ -602,6 +602,102 @@ class TableTest extends Testcase
 
         $expect = '<table></table>';
 
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_align_is_set_via_with_align()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn()->setCell('Name')->withAlign('center');
+
+        $expect = '<table><thead><tr><th align="center">Name</th></tr></thead></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_class_is_set_via_with_class()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn()->setCell('Name')->withClass('text-uppercase');
+
+        $expect = '<table><thead><tr><th class="text-uppercase">Name</th></tr></thead></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_cspan_is_set_via_with_cspan()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn()->setCell('Name')->withCspan(2);
+
+        $expect = '<table><thead><tr><th cspan="2">Name</th></tr></thead></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_rspan_is_set_via_with_rspan()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn()->setCell('Name');
+        $table->newRow()->setCell('John')->withRspan(3);
+
+        $expect = '<table><thead><tr><th>Name</th></tr></thead><tbody><tr><td rspan="3">John</td></tr></tbody></table>';
+
+        // Act
+        $actual = $table->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_style_is_set_via_with_style()
+    {
+        // Arrange
+        $table = new Table;
+
+        $table->newColumn()->setCell('Name')->withStyle('color: red');
+
+        $expect = '<table><thead><tr><th style="color: red">Name</th></tr></thead></table>';
+
+        // Act
         $actual = $table->__toString();
 
         // Assert

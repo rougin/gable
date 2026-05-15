@@ -244,7 +244,7 @@ class PageeTest extends Testcase
         $style = new BootstrapStyle;
 
         // Act
-        $pagee->withStyle($style);
+        $pagee->useStyle($style);
 
         $actual = $pagee->getStyle();
 

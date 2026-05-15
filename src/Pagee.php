@@ -323,7 +323,7 @@ class Pagee
      *
      * @return self
      */
-    public function withStyle(StyleInterface $style)
+    public function useStyle(StyleInterface $style)
     {
         $this->style = $style;
 
