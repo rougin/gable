@@ -760,6 +760,83 @@ public function withErrorText($text, $key = 'loadError')
 public function withName($name)
 ```
 
+## Styling per cell
+
+The following fluent methods set attributes on the last added cell. They work for both column headers (`<th>`) and row cells (`<td>`):
+
+``` php
+$table = new Table;
+$table->newColumn();
+
+$table->setCell('Name')
+    ->withAlign('center')
+    ->withClass('text-uppercase')
+    ->withWidth(30);
+
+$table->newRow();
+$table->setCell('John Doe')
+    ->withStyle('color: red');
+
+echo $table;
+```
+
+See the following methods that are available for styling:
+
+``` php
+/**
+ * Sets the alignment of the last cell.
+ *
+ * @param string $align
+ *
+ * @return self
+ */
+public function withAlign($align)
+```
+
+``` php
+/**
+ * Sets the CSS class of the last cell.
+ *
+ * @param string $class
+ *
+ * @return self
+ */
+public function withClass($class)
+```
+
+``` php
+/**
+ * Sets the colspan of the last cell.
+ *
+ * @param integer $cspan
+ *
+ * @return self
+ */
+public function withCspan($cspan)
+```
+
+``` php
+/**
+ * Sets the rowspan of the last cell.
+ *
+ * @param integer $rspan
+ *
+ * @return self
+ */
+public function withRspan($rspan)
+```
+
+``` php
+/**
+ * Sets the inline CSS style of the last cell.
+ *
+ * @param string $style
+ *
+ * @return self
+ */
+public function withStyle($style)
+```
+
 ``` php
 /**
  * Sets the width of the last cell in percentage.
@@ -778,10 +855,7 @@ The default styling uses Bootstrap 5 classes. To use a different CSS framework, 
 ``` php
 namespace Rougin\Test\Styles;
 
-use Rougin\Gable\Table;
-use Rougin\Gable\Pagee;
 use Rougin\Gable\StyleInterface;
-use Rougin\Gable\Styles\BootstrapStyle;
 
 class TailwindStyle implements StyleInterface
 {
