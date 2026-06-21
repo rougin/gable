@@ -58,7 +58,7 @@ class PageeTest extends Testcase
 
         $pagee->setPageKey('p');
 
-        $expect = 'myDispatch.pagee={limit:10,limitKey:"l",link:"/users",dispatchKey:"myDispatch",page:"2",pageKey:"p",pages:0,total:100,items:function(){if(0===this.pages){const t=this.total/this.limit;this.pages=Math.ceil(t)}return Array.from({length:this.pages})},url:function(t){return this.link+"?"+this.pageKey+"="+t+"&"+this.limitKey+"="+this.limit},view:function(t,i){const e=parseInt(i.getAttribute("page"));e!==this.page&&(history.pushState({},"",i.href),t(this.dispatchKey,e))}}';
+        $expect = 'myDispatch.pagee={limit:10,limitKey:"l",link:"/users",dispatchKey:"myDispatch",page:"2",pageKey:"p",pages:0,total:100,params:"",items:function(){if(0===this.pages){const t=this.total/this.limit;this.pages=Math.ceil(t)}return Array.from({length:this.pages})},url:function(t){return this.link+"?"+this.pageKey+"="+t+"&"+this.limitKey+"="+this.limit+this.params},view:function(t,i){const e=parseInt(i.getAttribute("page"));e!==this.page&&(history.pushState({},"",i.href),t(this.dispatchKey,e))}}';
 
         // Act
         $actual = $pagee->toObject('myDispatch');
@@ -250,6 +250,108 @@ class PageeTest extends Testcase
 
         // Assert
         $this->assertSame($style, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_param_is_added()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $expect = array('search' => 'john');
+
+        // Act
+        $pagee->addParam('search', 'john');
+
+        $actual = $pagee->getParams();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_multiple_params_are_added()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $expect = array('search' => 'john', 'status' => 'active');
+
+        // Act
+        $pagee->addParam('search', 'john');
+
+        $pagee->addParam('status', 'active');
+
+        $actual = $pagee->getParams();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_standard_pagination_renders_with_params()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $pagee->setTotal(100);
+
+        $pagee->setLimit(10);
+
+        $pagee->setPage(2);
+
+        $pagee->setLink('/users');
+
+        $pagee->addParam('search', 'john');
+
+        $pagee->addParam('status', 'active');
+
+        $expect = '<div class="d-inline-block"><ul class="pagination"><li class="page-item"><a class="page-link" href="/users?p=1&l=10&search=john&status=active"><span>First</span></a></li><li class="page-item"><a class="page-link" href="/users?p=1&l=10&search=john&status=active"><span>Previous</span></a></li><li class="page-item"><a class="page-link" href="/users?p=1&l=10&search=john&status=active"><span>1</span></a></li><li class="page-item active"><a class="page-link" href="javascript:void(0)"><span>2</span></a></li><li class="page-item"><a class="page-link" href="/users?p=3&l=10&search=john&status=active"><span>3</span></a></li><li class="page-item"><a class="page-link" href="/users?p=4&l=10&search=john&status=active"><span>4</span></a></li><li class="page-item"><a class="page-link" href="/users?p=5&l=10&search=john&status=active"><span>5</span></a></li><li class="page-item"><a class="page-link" href="/users?p=6&l=10&search=john&status=active"><span>6</span></a></li><li class="page-item"><a class="page-link" href="/users?p=7&l=10&search=john&status=active"><span>7</span></a></li><li class="page-item"><a class="page-link" href="/users?p=8&l=10&search=john&status=active"><span>8</span></a></li><li class="page-item"><a class="page-link" href="/users?p=9&l=10&search=john&status=active"><span>9</span></a></li><li class="page-item"><a class="page-link" href="/users?p=10&l=10&search=john&status=active"><span>10</span></a></li><li class="page-item"><a class="page-link" href="/users?p=3&l=10&search=john&status=active"><span>Next</span></a></li><li class="page-item"><a class="page-link" href="/users?p=10&l=10&search=john&status=active"><span>Last</span></a></li></ul></div>';
+
+        // Act
+        $actual = $pagee->__toString();
+
+        // Assert
+        $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_passed_if_js_object_is_rendered_with_params()
+    {
+        // Arrange
+        $pagee = new Pagee;
+
+        $pagee->setTotal(100);
+
+        $pagee->setLimit(10);
+
+        $pagee->setPage(2);
+
+        $pagee->setLink('/users');
+
+        $pagee->setLimitKey('l');
+
+        $pagee->setPageKey('p');
+
+        $pagee->addParam('search', 'john');
+
+        $pagee->addParam('status', 'active');
+
+        $expect = 'myDispatch.pagee={limit:10,limitKey:"l",link:"/users",dispatchKey:"myDispatch",page:"2",pageKey:"p",pages:0,total:100,params:"&search=john&status=active",items:function(){if(0===this.pages){const t=this.total/this.limit;this.pages=Math.ceil(t)}return Array.from({length:this.pages})},url:function(t){return this.link+"?"+this.pageKey+"="+t+"&"+this.limitKey+"="+this.limit+this.params},view:function(t,i){const e=parseInt(i.getAttribute("page"));e!==this.page&&(history.pushState({},"",i.href),t(this.dispatchKey,e))}}';
+
+        // Act
+        $actual = $pagee->toObject('myDispatch');
+
+        // Assert
+        $this->assertEquals($expect, $actual);
     }
 
     /**

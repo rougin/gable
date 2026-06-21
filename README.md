@@ -191,6 +191,11 @@ $pagee->setLimit(10); // Items per page
 $pagee->setPage(2); // Current page
 $pagee->setLink('/users'); // Base URL for the links
 
+// Add custom query parameters ----------
+$pagee->addParam('search', 'john');
+$pagee->addParam('status', 'active');
+// --------------------------------------
+
 echo $pagee;
 ```
 
@@ -198,17 +203,17 @@ echo $pagee;
 <div class="d-inline-block">
   <ul class="pagination">
     <li class="page-item">
-      <a class="page-link" href="/users?p=1&l=10">
+      <a class="page-link" href="/users?p=1&l=10&search=john&status=active">
         <span>First</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=1&l=10">
+      <a class="page-link" href="/users?p=1&l=10&search=john&status=active">
         <span>Previous</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=1&l=10">
+      <a class="page-link" href="/users?p=1&l=10&search=john&status=active">
         <span>1</span>
       </a>
     </li>
@@ -218,52 +223,52 @@ echo $pagee;
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=3&l=10">
+      <a class="page-link" href="/users?p=3&l=10&search=john&status=active">
         <span>3</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=4&l=10">
+      <a class="page-link" href="/users?p=4&l=10&search=john&status=active">
         <span>4</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=5&l=10">
+      <a class="page-link" href="/users?p=5&l=10&search=john&status=active">
         <span>5</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=6&l=10">
+      <a class="page-link" href="/users?p=6&l=10&search=john&status=active">
         <span>6</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=7&l=10">
+      <a class="page-link" href="/users?p=7&l=10&search=john&status=active">
         <span>7</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=8&l=10">
+      <a class="page-link" href="/users?p=8&l=10&search=john&status=active">
         <span>8</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=9&l=10">
+      <a class="page-link" href="/users?p=9&l=10&search=john&status=active">
         <span>9</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=10&l=10">
+      <a class="page-link" href="/users?p=10&l=10&search=john&status=active">
         <span>10</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=3&l=10">
+      <a class="page-link" href="/users?p=3&l=10&search=john&status=active">
         <span>Next</span>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="/users?p=10&l=10">
+      <a class="page-link" href="/users?p=10&l=10&search=john&status=active">
         <span>Last</span>
       </a>
     </li>

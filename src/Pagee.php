@@ -46,6 +46,11 @@ class Pagee
     protected $pageKey = 'p';
 
     /**
+     * @var array<string, string>
+     */
+    protected $params = array();
+
+    /**
      * @var integer
      */
     protected $total = 0;
@@ -150,6 +155,21 @@ class Pagee
     }
 
     /**
+     * Adds a custom query parameter to the pagination links.
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @return self
+     */
+    public function addParam($key, $value)
+    {
+        $this->params[$key] = (string) $value;
+
+        return $this;
+    }
+
+    /**
      * @return self
      */
     public function asAlpine()
@@ -197,6 +217,14 @@ class Pagee
     public function getPageKey()
     {
         return $this->pageKey;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 
     /**
@@ -299,7 +327,14 @@ class Pagee
      */
     public function toObject($dispatchKey)
     {
-        $object = '{limit:[LIMIT],limitKey:"[LIMIT_KEY]",link:"[LINK]",dispatchKey:"[DISPATCH_KEY]",page:"[PAGE]",pageKey:"[PAGE_KEY]",pages:0,total:[TOTAL],items:function(){if(0===this.pages){const t=this.total/this.limit;this.pages=Math.ceil(t)}return Array.from({length:this.pages})},url:function(t){return this.link+"?"+this.pageKey+"="+t+"&"+this.limitKey+"="+this.limit},view:function(t,i){const e=parseInt(i.getAttribute("page"));e!==this.page&&(history.pushState({},"",i.href),t(this.dispatchKey,e))}}';
+        $paramsString = '';
+
+        foreach ($this->params as $key => $value)
+        {
+            $paramsString .= '&' . $key . '=' . $value;
+        }
+
+        $object = '{limit:[LIMIT],limitKey:"[LIMIT_KEY]",link:"[LINK]",dispatchKey:"[DISPATCH_KEY]",page:"[PAGE]",pageKey:"[PAGE_KEY]",pages:0,total:[TOTAL],params:"[PARAMS]",items:function(){if(0===this.pages){const t=this.total/this.limit;this.pages=Math.ceil(t)}return Array.from({length:this.pages})},url:function(t){return this.link+"?"+this.pageKey+"="+t+"&"+this.limitKey+"="+this.limit+this.params},view:function(t,i){const e=parseInt(i.getAttribute("page"));e!==this.page&&(history.pushState({},"",i.href),t(this.dispatchKey,e))}}';
 
         $object = str_replace('[DISPATCH_KEY]', $dispatchKey, $object);
 
@@ -314,6 +349,8 @@ class Pagee
         $object = str_replace('[PAGE_KEY]', $this->getPageKey(), $object);
 
         $object = str_replace('[TOTAL]', (string) $this->getTotal(), $object);
+
+        $object = str_replace('[PARAMS]', $paramsString, $object);
 
         return $dispatchKey . '.pagee=' . $object;
     }
@@ -367,6 +404,11 @@ class Pagee
         $link = $this->link . '?' . $this->pageKey . '=' . $page;
 
         $link .= '&' . $this->limitKey . '=' . $this->limit;
+
+        foreach ($this->params as $key => $value)
+        {
+            $link .= '&' . $key . '=' . $value;
+        }
 
         return $active ? 'javascript:void(0)' : $link;
     }
